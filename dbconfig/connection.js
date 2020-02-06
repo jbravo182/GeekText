@@ -1,7 +1,8 @@
-const { MongoClient } = require('mongodb');
+const { MongoClient } = require("mongodb");
+
 
 process.env.NODE_ENV === "production" ? null : require("dotenv").config()
-let connection = new MongoClient(process.env.MONGODB_URI)
+let connection = new MongoClient(process.env.MONGODB_URI, { useUnifiedTopology: true, useNewUrlParser: true})
 connection.connect(err => {
     if (!err) {
         console.log("Connection to MongoDB established");
