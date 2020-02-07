@@ -1,6 +1,6 @@
 import React from 'react';
 import LoginForm from './components/LoginForm';
-import CreateAccountForm from '.components/CreateAccountForm';
+import CreateAccountForm from './components/CreateAccountForm';
 
 function App() {
   return (
