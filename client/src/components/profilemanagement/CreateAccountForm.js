@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import API from "../utils/API";
+import API from "../../utils/API";
 import { Form, Alert, Button, Container } from "react-bootstrap";
 
 function CreateAccountForm() {
@@ -12,14 +12,26 @@ function CreateAccountForm() {
     function submitHandle(event) {
         event.preventDefault();
         const user = {
-            "first": firstName,
-            "last": lastName,
+            "firstName": firstName,
+            "lastName": lastName,
             "email": email,
-            "password": password
+            "password": password,
+            "homeAddress": null,
+            "nickname": null
         }
         API.createAccount(user)
-            .then(res => console.log("Account Created"))
-            .catch(err => setError(true));
+            .then(res => alert("Account Created"))
+            .catch(err => AccountCreationError(err));
+
+    }
+
+    function AccountCreationError(err) {
+        if(err.response && err.response.status === 409){
+            setError(true);
+        } else {
+            alert("Account creation error - " + err);
+        }
+    }
 
         function passwordChangeHandle(event) {
             setPassword(event.currentTarget.value);
@@ -44,7 +56,7 @@ function CreateAccountForm() {
         return (
             <React.Fragment>
                 <Container style={{ paddingTop: "20px" }}>
-                    {error ? <Alert dismissable variant="danger" onClose={dismissHandle}>There was an error creating your Account</Alert> : null}
+                    {error ? <Alert dismissable variant="danger" onClose={dismissHandle}>There exists a user with that email address</Alert> : null}
                     <Form onSubmit={e => submitHandle(e)}>
                         <Form.Group controlId="CreateAccountForm.firstName">
                             <Form.Label>First Name</Form.Label>
@@ -62,12 +74,12 @@ function CreateAccountForm() {
                             <Form.Label>Password</Form.Label>
                             <Form.Control type="password" value={password} onChange={passwordChangeHandle} />
                         </Form.Group>
-                        <Button type="submit">Submit Form</Button>
+                        <Button type="submit">Register</Button>
                     </Form>
                 </Container>
             </React.Fragment>
         )
-    }
+    
 }
 
 export default CreateAccountForm;

@@ -8,22 +8,26 @@ const auth = {
             if (result != null) {
                 bcrypt.compare(body.password, result.password, function (error, res) {
                     let token = jwt.sign({ username: result.email },
-                        process.env.JWT_SECRET,
+                        "sweng1",
                         {
                             expiresIn: '24h'
                         }
                     )
+
+                    if(error) {
+                        cb(500, error);
+                    }
                     if (res) {
                         cb(200, token);
                     }
                     else {
-                        cb(500, error);
+                        cb(401, "Wrong email or password");
                     }
 
                 });
             }
             else {
-                cb(500, err);
+                cb(401, "Wrong email or password");
             }
         });
     },
@@ -44,10 +48,26 @@ const auth = {
                 });
             }
             else {
-                cb(500, findError);
+                cb(409, findResult);
             }
         });
+    },
+    getUser: (data, cb) => {
+        jwt.verify(data.auth_token, "sweng1", function(err, decoded) {
+            if(err){
+                cb(401, err)
+            } else {
+                const collection = mongodbConnection.db().collection("Auth");
+                collection.findOne({ email: data.email }, (findError, findResult) => {
+                    if(findResult) {
+                        cb(200, findResult);
+                    } else {
+                        cb(404, findError);
+                    }
+                })
+            }
+        })
     }
-}
+};
 
 module.exports = auth;
