@@ -1,5 +1,6 @@
 import axios from "axios";
 
+
 export default {
     //Gets all Campaign names
     login: function (data) {
@@ -9,6 +10,9 @@ export default {
         return axios.post('/api/auth/create', data);
     },
     getUser: function(data) {
-        return axios.post('/api/auth/getUser', data);
+        let token = localStorage.getItem("auth_token");
+        return axios.post('/api/auth/getUser', data, {headers: {
+            'x-access-token': token
+        }});
     }
 };

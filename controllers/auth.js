@@ -8,7 +8,7 @@ const auth = {
             if (result != null) {
                 bcrypt.compare(body.password, result.password, function (error, res) {
                     let token = jwt.sign({ username: result.email },
-                        "sweng1",
+                        process.env.JWT_SECRET,
                         {
                             expiresIn: '24h'
                         }
@@ -53,7 +53,7 @@ const auth = {
         });
     },
     getUser: (data, cb) => {
-        jwt.verify(data.auth_token, "sweng1", function(err, decoded) {
+        jwt.verify(data.auth_token, process.env.JWT_SECRET, function(err, decoded) {
             if(err){
                 cb(401, err)
             } else {
