@@ -43,7 +43,7 @@ function LoginForm() {
                         <Form.Label>Password</Form.Label>
                         <Form.Control type="password" value={password} onChange={passwordChangeHandle} />
                     </Form.Group>
-                    <Button type="Submit">Submit Form</Button>
+                    <Button color="primary" size = "sm">Submit Form</Button>
                 </Form>
             </Container>
         </React.Fragment>

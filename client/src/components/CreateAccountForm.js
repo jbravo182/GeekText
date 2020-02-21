@@ -21,6 +21,9 @@ function CreateAccountForm() {
             .then(res => console.log("Account Created"))
             .catch(err => setError(true));
 
+          }
+            
+
         function passwordChangeHandle(event) {
             setPassword(event.currentTarget.value);
         }
@@ -68,6 +71,6 @@ function CreateAccountForm() {
             </React.Fragment>
         )
     }
-}
+
 
 export default CreateAccountForm;

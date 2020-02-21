@@ -1,12 +1,13 @@
 import React from 'react';
 import LoginForm from './components/LoginForm';
 import CreateAccountForm from './components/CreateAccountForm';
+import WishList from './components/WishList';
 
 function App() {
   return (
     <React.Fragment>
-      <LoginForm></LoginForm>
-      <CreateAccountForm></CreateAccountForm>
+      
+      <WishList></WishList>
     </React.Fragment>
   );
 }
