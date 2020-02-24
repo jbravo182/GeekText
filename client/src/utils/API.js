@@ -11,7 +11,7 @@ export default {
     },
     getUser: function(data) {
         let token = localStorage.getItem("auth_token");
-        return axios.post('/api/auth/getUser', data, {headers: {
+        return axios.post('/api/user/getUser', data, {headers: {
             'x-access-token': token
         }});
     }

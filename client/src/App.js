@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import CreateAccountForm from './components/profilemanagement/CreateAccountForm';
-import EditProfileComponent from "./components/EditProfileComponent";
+import EditProfileComponent from "./components/profilemanagement/EditProfileComponent";
 import NavibarComponent from "./components/NavibarComponent";
 
 function App() {

@@ -51,22 +51,6 @@ const auth = {
                 cb(409, findResult);
             }
         });
-    },
-    getUser: (data, cb) => {
-        jwt.verify(data.auth_token, process.env.JWT_SECRET, function(err, decoded) {
-            if(err){
-                cb(401, err)
-            } else {
-                const collection = mongodbConnection.db().collection("Auth");
-                collection.findOne({ email: data.email }, (findError, findResult) => {
-                    if(findResult) {
-                        cb(200, findResult);
-                    } else {
-                        cb(404, findError);
-                    }
-                })
-            }
-        })
     }
 };
 
