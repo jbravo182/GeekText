@@ -1,35 +1,64 @@
-import React from "react";
-import { Form, Alert, Button, Container } from "react-bootstrap";
-import { Grid, Col, Dropdown, DropdownButton } from "react-bootstrap";
+import React, {useState, useRef, useEffect} from "react";
+import { Form, Button, Container } from "react-bootstrap";
+import { Grid, Col} from "react-bootstrap";
+import EditNicknameInfo from "../profilemanagement/EditNicknameInfo";
+import EditPersonalInfo from "../profilemanagement/EditPersonalInfo";
+import EditShippingInfo from "../profilemanagement/EditShippingInfo";
 
-function EditProfileComponent() {
+function EditProfileComponent(props) {
+    const [nickname, setNickname] = useState(props.userDetails.nickname);
+    const [email, setEmail] = useState(props.userDetails.email);
+    const [firstName, setFirstName] = useState(props.userDetails.firstName);
+    const [lastName, setLastName] = useState(props.userDetails.lastName);
 
     const months = ["January", "February", "March", "April", "May", "June", "July",
         "August", "September", "October", "November", "December"];
 
-    function submitHandle(event) {
-        // TODO
+    const isFirstRunNickname = useRef(true);
+    useEffect(() => {
+        if (isFirstRunNickname.current) {
+            isFirstRunNickname.current = false;
+            return;
+        }
+
+        props.onNameUpdate(getUserDetails());
+
+    }, [nickname]);
+
+    function getUserDetails(){
+        return {
+            nickname: nickname,
+            email: email,
+            firstName: firstName,
+            lastName: lastName};
     }
 
+    
+
     function checkLength(event) {
-        if (event.currentTarget.value.length > event.currentTarget.maxLength) {
-            event.currentTarget.value = event.currentTarget.value.slice(0, event.currentTarget.maxLength)
+        let inString = event.currentTarget.value;
+        let inChar = (inString).charCodeAt(inString.length-1);
+
+        if (inChar < 48 || inChar > 57) {
+            event.currentTarget.value = inString.slice(0, inString.length-1);
         }
+
+        if(inString.length > event.currentTarget.maxLength) {
+            event.currentTarget.value = inString.slice(0, event.currentTarget.maxLength);
+        }
+
     }
 
     return (
         <React.Fragment>
             <Container style={{ paddingTop: "20px" }}>
-                <b>Sprint 3!</b>
-                <h1>Edit Profile Placeholder</h1>
-                <b>Your Credit Cards</b>
-                <ul>
-
-                </ul>
+                <EditNicknameInfo nickname={nickname} email={email} onNicknameUpdate={setNickname}/>
+                <EditPersonalInfo/>
+                <EditShippingInfo/>
                 <b>Add a Credit Card</b>
                 <Form.Group controlId="EditProfileComponent.creditCardNumber">
                     <Form.Label>Credit Card Number</Form.Label>
-                    <Form.Control type="number" maxLength="16" onInput={checkLength} />
+                    <Form.Control type="text" maxLength="16" onInput={checkLength} />
                 </Form.Group>
                 <Form.Label>Expiration Date</Form.Label>
                 <Form.Row controlId="EditProfileComponent.expirationDate">
@@ -41,14 +70,14 @@ function EditProfileComponent() {
                         </Form.Control>
                     </Form.Group>
                     <Form.Group as={Col} md="4">
-                        <Form.Control type="number" maxLength="4" onInput={checkLength} placeholder="Year" />
+                        <Form.Control type="text" maxLength="4" onInput={checkLength} placeholder="Year" />
                     </Form.Group>
                 </Form.Row>
                 <Form.Group controlId="EditProfileComponent.CVV">
                     <Form.Label>Security Code</Form.Label>
-                    <Form.Control style={{ width: "25%" }} type="number" maxLength="3" onInput={checkLength} placeholder="CVV" />
+                    <Form.Control style={{ width: "25%" }} type="text" maxLength="3" onInput={checkLength} placeholder="CVV" />
                 </Form.Group>
-                <Button type="submit">Add</Button>
+                <Button type="Submit">Add</Button>
             </Container>
         </React.Fragment>
     )

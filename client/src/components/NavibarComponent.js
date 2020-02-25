@@ -1,28 +1,44 @@
-import React, { useState } from "react";
+import React, { Component } from "react";
 import Navbar from 'react-bootstrap/Navbar';
 import LoginForm from "./profilemanagement/LoginForm";
 import {Dropdown} from "react-bootstrap";
 
-function NavibarComponent(props){
-    const[name, setName] = useState("");
-    const[userLoggedIn, setUserLoggedIn] = useState(false);
-    const pages = {EDIT_PROFILE: 1};
+class NavibarComponent extends Component {
+    constructor(props){
+        super(props);
+        this.userLoggedIn = false;
+        this.userDisplayName = "";
+        this.pages = {EDIT_PROFILE: 1};
 
-    function logout(){
-        setUserLoggedIn(false);
-        setName("");
-        props.onLogout(null);
+        this.logout = this.logout.bind(this);
+        this.updateDisplayName = this.updateDisplayName.bind(this);
+        this.loginHandle = this.loginHandle.bind(this);
     }
 
-    function setUserName(user) {
-        setName(user.firstName + " " + user.lastName);
-        setUserLoggedIn(true);
-        props.onLoginSuccessful(user);
+    logout() {
+        this.userLoggedIn = false;
+        this.userDisplayName = "";
+        this.props.onUserLoginLogout(null);
     }
 
+    updateDisplayName(user) {
+        if(user.nickname) {
+            this.userDisplayName = user.nickname;
+        } else {
+            this.userDisplayName = user.firstName + " " + user.lastName;
+        }
+    }
+
+    loginHandle(user){
+        this.updateDisplayName(user);
+        this.userLoggedIn = true;
+        this.props.onUserLoginLogout(user);
+    }
+
+    render() {
     return (
         <Navbar bg="primary" expand="lg">
-            {!userLoggedIn ? <LoginForm onLogin={setUserName}/> :
+            {!this.userLoggedIn ? <LoginForm onLogin={this.loginHandle}/> :
             <React.Fragment>
                 <Dropdown>
                     <Dropdown.Toggle variant="secondary" id="dropdown-basic">
@@ -30,15 +46,16 @@ function NavibarComponent(props){
                         </Dropdown.Toggle>
 
                         <Dropdown.Menu>
-                            <Dropdown.Item onClick={() => props.onNewPage(pages.EDIT_PROFILE)}>Edit Profile</Dropdown.Item>
+                            <Dropdown.Item onClick={() => this.props.onNewPage(this.pages.EDIT_PROFILE)}>Edit Profile</Dropdown.Item>
                             <Dropdown.Divider/>
-                            <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
+                            <Dropdown.Item onClick={this.logout}>Logout</Dropdown.Item>
                         </Dropdown.Menu>
                         </Dropdown>
-                        <b>Hello, {name}!</b>
+                        <b>Hello, {this.userDisplayName}!</b>
                         </React.Fragment>}
         </Navbar>
-    )
+    );
+    }
 }
 
 export default NavibarComponent;

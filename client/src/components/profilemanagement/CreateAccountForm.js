@@ -16,9 +16,9 @@ function CreateAccountForm() {
             "lastName": lastName,
             "email": email,
             "password": password,
-            "homeAddress": null,
-            "nickname": null
-        }
+            "homeAddress": "",
+            "nickname": ""
+        };
         API.createAccount(user)
             .then(res => alert("Account Created"))
             .catch(err => AccountCreationError(err));
