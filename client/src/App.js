@@ -3,10 +3,6 @@ import Header from './Header'
 import {Route, HashRouter} from "react-router-dom";
 import SearchArea from './SearchArea';
 
-//import AuthorPage from './AuthorPage';
-
-//import ProfileSettings from './ProfileManagement/ProfileSettings';
-
 class App extends Component {
 
     render() {
