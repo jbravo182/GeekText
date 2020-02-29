@@ -4,6 +4,7 @@ import {Route, HashRouter} from "react-router-dom";
 import SearchArea from './SearchArea';
 import LoginForm from './components/LoginForm';
 import HomePage from './HomePage';
+import Profile from './Profile';
 
 class App extends Component {
 
@@ -16,6 +17,7 @@ class App extends Component {
                             <Route path="/search" component={SearchArea}/>
                             <Route path="/LoginForm" component={LoginForm}/>
                             <Route path="/HomePage" component={HomePage}/>
+                            <Route path="/Profile" component={Profile}/>
                         </div>
                 </div>
             </HashRouter>

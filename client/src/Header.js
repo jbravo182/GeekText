@@ -123,7 +123,7 @@ class Header extends Component {
             return (
                 <div>
                     <NavLink style={{ textDecoration: 'none',  color: 'black'}} 
-                                to="/LoginForm"
+                                to="/Profile"
                                 >Login / Register</NavLink>
                 </div>
             )
