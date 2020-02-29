@@ -1,5 +1,6 @@
 import axios from "axios";
 
+
 export default {
     //Gets all Campaign names
     login: function (data) {
@@ -7,5 +8,17 @@ export default {
     },
     createAccount: function (data) {
         return axios.post('/api/auth/create', data);
-    }
+    },
+    getUser: function(data) {
+        let token = localStorage.getItem("auth_token");
+        return axios.post('/api/user/getUser', data, {headers: {
+            'x-access-token': token
+        }})
+    },
+    updateUser: function(data){
+        let token = localStorage.getItem("auth_token");
+        return axios.post('/api/user/updateUser', data, {headers: {
+            'x-access-token':token
+        }})
+    },
 };
