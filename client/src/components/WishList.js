@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import API from "../utils/API";
-import { Form, Alert, Button, Container, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, FormGroup, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
+import { Form, Alert, Button, Container, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, FormGroup, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, ListGroup, ListGroupItem, Badge } from "reactstrap";
 
 const WishList = (props) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -66,9 +66,22 @@ const WishList = (props) => {
                     <Button color="primary" onClick={toggle}>Create List</Button>{' '}
                     <Button color="secondary" onClick={toggle}>Cancel</Button>
                 </ModalFooter>
-            </Modal>
+
+        </div>
+
+        <div>
+          <ListGroup flush>
+            <ListGroupItem tag = "a" href = "#">Fiction<Badge pill style = {{marginLeft: "2%"}}>6</Badge></ListGroupItem>
+            <ListGroupItem tag = "a" href = "#">Horror<Badge pill style = {{marginLeft: "2%"}}>3</Badge></ListGroupItem>
+            <ListGroupItem tag = "a" href = "#">Self-Help<Badge pill style = {{marginLeft: "2%"}}>1</Badge></ListGroupItem>
+            <ListGroupItem tag = "a" href = "#">Biography<Badge pill style = {{marginLeft: "2%"}}>5</Badge></ListGroupItem>
+          </ListGroup>
+
+
         </div>
       </div>
+
+
 
   )
 }
