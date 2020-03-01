@@ -5,6 +5,8 @@ import SearchArea from './SearchArea';
 import HomePage from './HomePage';
 import Profile from './Profile';
 import ShoppingCart from './ShoppingCart';
+import Tab from './Tab';
+import Wishlist from './components/WishList';
 
 class App extends Component {
 
@@ -18,6 +20,8 @@ class App extends Component {
                             <Route path="/HomePage" component={HomePage}/>
                             <Route path="/Profile" component={Profile}/>
                             <Route path="/ShoppingCart" component={ShoppingCart}/>
+                            <Route path="/BookDetails" component={Tab}/>
+                            <Route path="/Wishlist" component={Wishlist}/>
                         </div>
                 </div>
             </HashRouter>
