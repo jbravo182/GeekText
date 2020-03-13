@@ -1,4 +1,5 @@
 const mongodbConnection = require("../dbconfig/connection.js");
+const { ObjectID } = require('mongodb');
 const user = {
     getUser: (data, cb) => {
         //Access User Collection in MongoDB
@@ -11,6 +12,36 @@ const user = {
                 cb(200, rest);
             } else {
                 cb(404, findError);
+            }
+        });
+    },
+    updateUserEmail: (data, cb) => {
+        const creditCardCollection = mongodbConnection.db().collection("CreditCard");
+
+        // Update User
+        creditCardCollection.updateMany(data.primaryKeys, data.updates, (creditCardLevelErr) => {
+            if (!creditCardLevelErr) {
+                const shippingAddressesCollection = mongodbConnection.db().collection("ShippingAddress");
+
+                shippingAddressesCollection.updateMany(data.primaryKeys, data.updates, (shippingAddressErr) => {
+                    if (!shippingAddressErr) {
+                        const userCollection = mongodbConnection.db().collection("User");
+                        userCollection.updateOne(data.primaryKeys, data.updates, (userLevelErr, result) => {
+                            if (!userLevelErr) {
+                                cb(200, result);
+                            } else {
+                                console.log("User Email UPDATE ERROR at EMAIL level: " + userLevelErr);
+                                cb(500, userLevelErr);
+                            }
+                        });
+                    } else {
+                        console.log("User Email UPDATE ERROR at SHIPPING_ADDRESS level: " + shippingAddressErr);
+                        cb(500, shippingAddressErr);
+                    }
+                });
+            } else {
+                console.log("User Email UPDATE ERROR at Credit Card level: " + creditCardLevelErr);
+                cb(500, creditCardLevelErr);
             }
         });
     },
@@ -32,11 +63,11 @@ const user = {
         //Access CreditCard collection
         const collection = mongodbConnection.db().collection("CreditCard");
         //Find credit cards by user email (foreign key)
-        collection.find({ email: data.email }, (findError, findResults) => {
+        collection.find({ email: data.email }).toArray( (findError, findResults) => {
             if(findResults){
                 cb(200, findResults);
             } else {
-                cb(404, findError);
+                cb(404, "CREDIT CARDS NOT FOUND");
             }
         });
     },
@@ -57,7 +88,7 @@ const user = {
         //Access CreditCard collection
         const collection = mongodbConnection.db().collection("CreditCard");
         //Delete credit card from collection
-        collection.deleteOne(data, (deleteError, deleteResult) => {
+        collection.deleteOne({email: data.email, credit_card_num: data.credit_card_num}, (deleteError, deleteResult) => {
             if(!deleteError) {
                 cb(200, deleteResult);
             } else {
@@ -82,9 +113,10 @@ const user = {
     getShippingAddressesByUser: (data, cb) => {
         //Access Shipping Address collection
         const collection = mongodbConnection.db().collection("ShippingAddress");
-        //Find shipping address by primary key (email and address)
-        collection.find({ email: data.email, address: data.address}, (findError, findResults) => {
+        //Find shipping address by primary key (email)
+        collection.find({ email: data.email}).toArray( (findError, findResults) => {
             if(findResults){
+                // console.log(findResults)
                 cb(200, findResults);
             } else {
                 cb(404, findError);
@@ -108,7 +140,7 @@ const user = {
         //Access Shipping Address collection
         const collection = mongodbConnection.db().collection("ShippingAddress");
         //Delete shipping address from collection
-        collection.deleteOne(data, (deleteError, deleteResult) => {
+        collection.deleteOne({_id: new ObjectID(data._id)}, (deleteError, deleteResult) => {
             if(!deleteError) {
                 cb(200, deleteResult);
             } else {

@@ -5,6 +5,7 @@ const usersRoute = require('./user');
 
 router.use('/auth', authRoute);
 router.use("/user", auth.checkToken, usersRoute);
+router.use("/profilemanagement", auth.checkToken, usersRoute);
 
 
 module.exports = router;
