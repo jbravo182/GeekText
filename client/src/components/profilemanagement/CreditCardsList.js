@@ -116,7 +116,7 @@ function CreditCardsList(props) {
 
     function editHandle(index) {
         const creditCardUpdate = {
-            primaryKeys: {email: userEmail, creditCardNum: trueCreditCards[index].creditCardNum},
+            primaryKeys: {email: userEmail, creditCardNum: trueCreditCards[index].creditCardNumber},
             updates: {$set: {"creditCardNum": creditCards[index].creditCardNum,
                     "cvv": creditCards[index].cvv,
                     "expirationYear": creditCards[index].expirationYear,
@@ -206,9 +206,10 @@ function CreditCardsList(props) {
                 <Form.Group controlId="EditProfileComponent.CVV">
                     <Form.Label> Security Code</Form.Label>
                     <Form.Control style={{ width: "25%" }} type="text" maxLength="3" onInput={checkLength} value={CVV} onChange={updateCVV} placeholder="CVV"/>
+                    <Button className="float-right" type="submit" disabled={!formCheck}>Add credit card</Button>
                 </Form.Group>
                 </Card>
-                <Button className="float-right" type="submit" variant="primary">Save Changes</Button>
+                
             </Form>
         </React.Fragment>
     )

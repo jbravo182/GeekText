@@ -8,10 +8,24 @@ function ShippingAddressList(props) {
     const [addresses, setAddresses] = useState([]);
     const [newAddress, setNewAddress] = useState("");
     const [userEmail] = useState(props.email);
+    const [formCheck, setFormCheck] = useState(false);
 
     useEffect(() => {
         updateTrueAddresses();
     }, []);
+
+    useEffect(() => {checkIfEmpty()});
+
+
+
+    function checkIfEmpty() {
+        if (!newAddress) {
+            setFormCheck(false);
+        }
+        else {
+            setFormCheck(true);
+        }
+    }
 
     function updateTrueAddresses() {
         API.getShippingAddressesByUser({ email: userEmail })
@@ -38,7 +52,7 @@ function ShippingAddressList(props) {
 
     function editHandle(index) {
         const shippingAddressUpdate = {
-            primaryKeys: { email: userEmail, address: trueAddresses[index].address },
+            primaryKeys: { email: userEmail, address: trueAddresses[index].addresses },
             updates: { $set: { "address": addresses[index].address } }
         };
         API.updateShippingAddress(shippingAddressUpdate).then(() => {
@@ -82,7 +96,7 @@ function ShippingAddressList(props) {
                     <Form.Label>Address:</Form.Label>
                     <Form.Control placeholder="182 Main St" value={newAddress} onChange={addressChangeHandle} />
                 </Form.Group>
-                <Button className="float-right" type="submit" variant="primary">Save Changes</Button>
+                <Button className="float-right" type="submit" variant="primary" disabled={!formCheck}>Add address</Button>
             </Form>
         </React.Fragment>
     )
