@@ -21,4 +21,10 @@ export default {
             'x-access-token':token
         }})
     },
+    getSearchResults: function(data){
+        let token = localStorage.getItem("auth_token");
+        return axios.get('/api/search/getSearchResults', data, {headers: {
+            'x-access-token':token
+        }})
+    },
 };

@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import List from "./List";
-//import ServerCall from "../ServerCall";
+import API from './utils/API';
 import styled from "styled-components";
 import axios from 'axios';
 import Pagination from "react-js-pagination";
@@ -116,9 +116,9 @@ class BookList extends Component {
 
     
 
-    // retriveResults(term) {
-    //     ServerCall("getSearchInfo", term + ";"+ this.state.order, this.changeState);
-    // }
+    retriveResults(term) {
+        API.getSearchResults(term).then(res => this.props.state.books = res).catch(err => alert("Login error - " + err));
+    }
 
     // topResults(term) {
     //     topSellerClicked = true;
