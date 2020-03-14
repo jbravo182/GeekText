@@ -6,6 +6,10 @@ router.post("/getUser", (req,res) => {
     user.getUser(req.body, (status, data = "ok") => res.status(status).send(data));
 });
 
+router.post("/updateUserEmail", (req, res) => {
+    user.updateUserEmail(req.body, (status, data = "ok") => res.status(status).send(data));
+});
+
 router.post("/updateUser", (req, res) => {
     user.updateUser(req.body, (status, data = "ok") => res.status(status).send(data));
 });
@@ -18,12 +22,16 @@ router.post("/addCreditCard", (req, res) => {
     user.addCreditCard(req.body, (status, data = "ok") => res.status(status).send(data));
 });
 
-router.post("/deleteCreditCard", (req, res) => {
+router.post("/removeCreditCard", (req, res) => {
     user.removeCreditCard(req.body, (status, data = "ok") => res.status(status).send(data));
 });
 
 router.post("/updateCreditCard", (req, res) => {
     user.updateCreditCard(req.body, (status, data = "ok") => res.status(status).send(data));
+});
+
+router.post("/getShippingAddressesByUser", (req, res) => {
+    user.getShippingAddressesByUser(req.body, (status, data = "ok") => res.status(status).send(data));
 });
 
 router.post("/addShippingAddress", (req, res) => {
