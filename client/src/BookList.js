@@ -117,7 +117,8 @@ class BookList extends Component {
     
 
     retriveResults(term) {
-        API.getSearchResults(term).then(res => this.props.state.books = res).catch(err => alert("Login error - " + err));
+        console.log(window.location.href.substring(window.location.href.lastIndexOf('/') + 1));
+        API.getSearchResults(term).then(res => this.state.books = res).catch(err => alert("Search error - " + err));
     }
 
     // topResults(term) {
@@ -126,6 +127,8 @@ class BookList extends Component {
     // }
 
     returnList() {
+        console.log('Book length ' + this.state.books.length);
+        console.log('Book list ' + this.state.books);
         if (this.state.books.length !== 0 && this.state.books !== "0 results")
         {
             var bookList = this.state.books.map(function(book, index){
@@ -137,7 +140,7 @@ class BookList extends Component {
     }
 
     showNoResults() {
-        if (this.state.books === "0 results")
+        if (this.state.books.length === 0)
         {
             return <NoResultsContainer>
                     <p>No titles found (0 hits) - Try these tips:</p>
@@ -150,7 +153,7 @@ class BookList extends Component {
     }
 
     render() { 
-      //  this.retriveResults();
+      this.retriveResults(window.location.href.substring(window.location.href.lastIndexOf('/') + 1));
         return ( 
 
             <div>

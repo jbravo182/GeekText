@@ -22,8 +22,10 @@ export default {
         }})
     },
     getSearchResults: function(data){
+        console.log('Doing post');
+        console.log('Data in post ' + data);
         let token = localStorage.getItem("auth_token");
-        return axios.get('/api/search/getSearchResults', data, {headers: {
+        return axios.post('/api/search/getSearchResults', data, {headers: {
             'x-access-token':token
         }})
     },
