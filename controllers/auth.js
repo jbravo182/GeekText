@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const auth = {
     authenticateUser: (body, cb) => {
-        const collection = mongodbConnection.db().collection("Auth");
+        const collection = mongodbConnection.db().collection("User");
         collection.findOne({ email: body.email }, (err, result) => {
             if (result != null) {
                 bcrypt.compare(body.password, result.password, function (error, res) {
@@ -13,22 +13,26 @@ const auth = {
                             expiresIn: '24h'
                         }
                     )
+
+                    if(error) {
+                        cb(500, error);
+                    }
                     if (res) {
                         cb(200, token);
                     }
                     else {
-                        cb(500, error);
+                        cb(401, "Wrong email or password");
                     }
 
                 });
             }
             else {
-                cb(500, err);
+                cb(401, "Wrong email or password");
             }
         });
     },
     createUser: (data, cb) => {
-        const collection = mongodbConnection.db().collection("Auth");
+        const collection = mongodbConnection.db().collection("User");
         collection.findOne({ email: data.email }, (findError, findResult) => {
             if (!findResult) {
                 bcrypt.hash(data.password, 10, (err, hash) => {
@@ -44,10 +48,10 @@ const auth = {
                 });
             }
             else {
-                cb(500, findError);
+                cb(409, findResult);
             }
         });
     }
-}
+};
 
 module.exports = auth;

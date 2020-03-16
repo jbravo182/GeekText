@@ -10,20 +10,14 @@ let checkToken = (req, res, next) => {
         }
         jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
             if (err) {
-                return res.json({
-                    success: false,
-                    message: 'Invalid Token'
-                });
+                return res.status(401).send(err);
             } else {
                 req.decoded = decoded;
                 next();
             }
         });
     } else {
-        return res.json({
-            success: false,
-            message: 'No Token Provided'
-        });
+        return res.status(400).send("No Token Provided");
     }
 }
 
