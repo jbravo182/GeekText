@@ -8,6 +8,7 @@ import Profile from './Profile';
 import ShoppingCart from './ShoppingCart';
 import Tab from './Tab';
 import Wishlist from './components/WishList';
+import Reviews from './Reviews';
 
 class App extends Component {
 
@@ -24,6 +25,7 @@ class App extends Component {
                             <Route path="/ShoppingCart" component={ShoppingCart}/>
                             <Route path="/BookDetails" component={Tab}/>
                             <Route path="/Wishlist" component={Wishlist}/>
+                            <Route path="/Reviews" component={Reviews}/>
                         </div>
                 </div>
             </HashRouter>
