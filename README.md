@@ -2,4 +2,4 @@
 CEN4010 Geek Text Project
 
 
-Delete this
+The things that need to be merged are inside
