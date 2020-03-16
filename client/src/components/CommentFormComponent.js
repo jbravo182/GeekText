@@ -31,9 +31,14 @@ export default class CommentForm extends Component {
     });
   };
 
+  goAnonymous = event => {
+    console.log('Anonymous');
+  }
 
   onSubmit(e) {
     e.preventDefault();
+    console.log(this.state.comment.name);
+    console.log(this.state.comment.message);
 
     if (!this.isFormValid()) {
       this.setState({ error: "All fields are required." });
@@ -84,18 +89,21 @@ export default class CommentForm extends Component {
     return (
       <React.Fragment>
         <form method="post" onSubmit={this.onSubmit}>
-          <div style={{'marginLeft':'20px', width: '200px'}} className="form-group">
+          <div style={{display:'flex'}} className="form-group">
             <input
               onChange={this.handleFieldChange}
               value={this.state.comment.name}
               className="form-control"
-              placeholder="Your Alias"
+              placeholder="nickname"
               name="name"
               type="text"
+              style={{width:"200px"}}
+              disabled='true'
             />
+            <button type='button' onClick= {this.goAnonymous}>Go Anonymous</button>
           </div>
 
-          <div style={{'marginLeft':'20px', width: '700px'}} className="form-group">
+          <div style={{ width: '700px'}} className="form-group">
             <textarea
               onChange={this.handleFieldChange}
               value={this.state.comment.message}
@@ -109,7 +117,7 @@ export default class CommentForm extends Component {
           {this.renderError()}
 
           <div className="form-group">
-            <button style={{'marginLeft':'20px', 'background-color':'green', border:'none'}} disabled={this.state.loading} className="btn btn-primary">
+            <button style={{ border:'none'}} disabled={this.state.loading} className="btn btn-primary">
               Submit Review
             </button>
           </div>

@@ -1,16 +1,16 @@
+
 const mongodbConnection = require("../dbconfig/connection.js");
-const user = {
-    getUser: (data, cb) => {
+const review = {
+    getNickname: (data, cb) => {
         const collection = mongodbConnection.db().collection("User");
-        collection.findOne({ email: data.email }, (findError, findResult) => {
+        collection.findOne({email: data.email}, (findError, findResult) => {
             if(findResult){
-                const {password, _id, ...rest} = findResult;
-                cb(200, rest);
+                const {nickname} = findResult;
+                cb(200, nickname);
             } else {
                 cb(404, findError);
             }
         });
     }
-};
 
-module.exports = user;
+};

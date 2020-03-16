@@ -57,8 +57,8 @@ class StarRatingComponent extends Component {
     this.setState({value: inputValue});
   }
 
-  onStarClick(index, value, name, someEvent) {
-    someEvent.stopPropagation();
+  onStarClick(index, value, name, e) {
+    e.stopPropagation();
 
     const { onStarClick, editing } = this.props;
 
@@ -66,11 +66,11 @@ class StarRatingComponent extends Component {
       return;
     }
 
-    onStarClick && onStarClick(index, value, name, someEvent);
+    onStarClick && onStarClick(index, value, name, e);
   }
 
-  onStarHover(index, value, name, someEvent) {
-    someEvent.stopPropagation();
+  onStarHover(index, value, name, e) {
+    e.stopPropagation();
 
     const { onStarHover, editing } = this.props;
 
@@ -78,11 +78,11 @@ class StarRatingComponent extends Component {
       return;
     }
 
-    onStarHover && onStarHover(index, value, name, someEvent);
+    onStarHover && onStarHover(index, value, name, e);
   }
 
-  onStarHoverOut(index, value, name, someEvent) {
-    someEvent.stopPropagation();
+  onStarHoverOut(index, value, name, e) {
+    e.stopPropagation();
 
     const { onStarHoverOut, editing } = this.props;
 
@@ -90,7 +90,7 @@ class StarRatingComponent extends Component {
       return;
     }
 
-    onStarHoverOut && onStarHoverOut(index, value, name, someEvent);
+    onStarHoverOut && onStarHoverOut(index, value, name, e);
   }
 
   renderStars() {
@@ -116,8 +116,8 @@ class StarRatingComponent extends Component {
 
     let starNodes = [];
 
-    for (let index = starCount; index > 0; index--) {
-      const id = `${name}_${index}`;
+    for (let i = starCount; i > 0; i--) {
+      const id = `${name}_${i}`;
       const starNodeInput = (
         <input
           key={`input_${id}`}
@@ -126,22 +126,22 @@ class StarRatingComponent extends Component {
           type="radio"
           name={name}
           id={id}
-          value={index}
-          checked={value === index}
-          onChange={this.onChange.bind(this, index, name)}
+          value={i}
+          checked={value === i}
+          onChange={this.onChange.bind(this, i, name)}
         />
       );
       const starNodeLabel = (
         <label
           key={`label_${id}`}
-          style={starStyles(index, value)}
-          className={'dv-star-rating-star ' + (value >= index ? 'dv-star-rating-full-star' : 'dv-star-rating-empty-star')}
+          style={starStyles(i, value)}
+          className={'dv-star-rating-star ' + (value >= i ? 'dv-star-rating-full-star' : 'dv-star-rating-empty-star')}
           htmlFor={id}
-          onClick={someEvent => this.onStarClick(index, value, name, someEvent)}
-          onMouseOver={someEvent => this.onStarHover(index, value, name, someEvent)}
-          onMouseLeave={someEvent => this.onStarHoverOut(index, value, name, someEvent)}
+          onClick={e => this.onStarClick(i, value, name, e)}
+          onMouseOver={e => this.onStarHover(i, value, name, e)}
+          onMouseLeave={e => this.onStarHoverOut(i, value, name, e)}
         >
-          {this.renderIcon(index, value, name, id)}
+          {this.renderIcon(i, value, name, id)}
         </label>
       );
 
@@ -177,7 +177,7 @@ class StarRatingComponent extends Component {
     }, className);
 
     return (
-      <div style={{display: 'inline-block', position: 'relative', marginLeft: '20px'}} className={classes}>
+      <div style={{display: 'inline-block', position: 'relative'}} className={classes}>
         {this.renderStars()}
       </div>
     );
