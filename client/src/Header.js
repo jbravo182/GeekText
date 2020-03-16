@@ -134,6 +134,9 @@ class Header extends Component {
                     <NavLink style={{ textDecoration: 'none',  color: 'black'}} 
                                 to="/Wishlist"
                                 >Wishlist </NavLink>
+                    <NavLink style={{ textDecoration: 'none',  color: 'black'}} 
+                                to="/Reviews"
+                                >Reviews </NavLink>
                 </div>
             )
         }
