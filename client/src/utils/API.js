@@ -24,4 +24,17 @@ export default {
     getAllBooks: function(data){
         return axios.post('/api/search/getAllBooks', data)
     },
+    add: function(data) {
+        return axios.post('/api/ShoppingCart/add', data);
+    },
+    delete: function(data) {
+        return axios.post('/api/ShoppingCart/delete', data);
+    },
+    displayAll: function(data) {
+        return axios.post('/api/ShoppingCart/displayAll', data);
+    },
+    componentDidMount: function(data) {
+        console.log("I reached componentDidMount");
+        return axios.get('/api/ShoppingCart', data);
+    },
 };

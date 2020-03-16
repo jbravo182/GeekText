@@ -1,2 +1,0 @@
-merge the code inside here with the real merge, replace everything that already exist EXCEPT API
-DO NOT REPLACE API, instead go inside the code and copy the Shoppingcart related API functions to the real API.
