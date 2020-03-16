@@ -35,7 +35,7 @@ class BookList extends Component {
             totalItemsCount: 1,
             sort: "title"
         };
-        //this.retriveResults = this.retriveResults.bind(this);
+        this.retriveResults = this.retriveResults.bind(this);
         this.returnList = this.returnList.bind(this);
         this.showNoResults = this.showNoResults.bind(this);
         this.changeState = this.changeState.bind(this);
@@ -44,12 +44,12 @@ class BookList extends Component {
         this.ASC.handlePageChange = this.handlePageChange.bind(this);
     }
 
-    // componentDidMount() {
-    //     this.retriveResults(this.props.match.params.term);
-    //     if(this.props.pageSize){
-    //         this.setState({size: this.props.pageSize});
-    //       }
-    // }
+    componentDidMount() {
+        this.retriveResults(this.props.match.params.term);
+        if(this.props.pageSize){
+            this.setState({size: this.props.pageSize});
+          }
+    }
 
 
     handlePageChange(pageNumber) {
@@ -117,8 +117,7 @@ class BookList extends Component {
     
 
     retriveResults(term) {
-        console.log(window.location.href.substring(window.location.href.lastIndexOf('/') + 1));
-        API.getSearchResults(term).then(res => this.state.books = res).catch(err => alert("Search error - " + err));
+        API.getSearchResults(term).then(res => this.state.books = res.data).catch(err => alert("Search error - " + err));
     }
 
     // topResults(term) {
@@ -153,7 +152,6 @@ class BookList extends Component {
     }
 
     render() { 
-      this.retriveResults(window.location.href.substring(window.location.href.lastIndexOf('/') + 1));
         return ( 
 
             <div>
@@ -192,7 +190,7 @@ total = {this.state.books.length}
                     placeholder="Author, Genre, Title "
                     onChange={this.handleSearch}/>
                 
-                <button id="topSearch"  onClick = {() => this.topResults(this.props.match.params.term)}>Top Sellers</button>
+                {/* <button id="topSearch"  onClick = {() => this.topResults(this.props.match.params.term)}>Top Sellers</button> */}
            
             </div>
         
