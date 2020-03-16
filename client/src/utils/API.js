@@ -21,9 +21,7 @@ export default {
             'x-access-token':token
         }})
     },
-    getSearchResults: function(data){
-        console.log('Doing post');
-        console.log('Data in post ' + data);
-        return axios.post('/api/search/getSearchResults', data)
+    getAllBooks: function(data){
+        return axios.post('/api/search/getAllBooks', data)
     },
 };

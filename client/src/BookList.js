@@ -4,6 +4,7 @@ import API from './utils/API';
 import styled from "styled-components";
 import axios from 'axios';
 import Pagination from "react-js-pagination";
+import linq from "linq";
 
 const pageSize = 10;
 
@@ -24,6 +25,7 @@ class BookList extends Component {
     constructor(props) {
         super(props);
         this.state = { 
+            allBooks: [],
             books: [],
             fi:[],
             onPage: 1,
@@ -117,7 +119,8 @@ class BookList extends Component {
     
 
     retriveResults(term) {
-        API.getSearchResults(term).then(res => this.state.books = res.data).catch(err => alert("Search error - " + err));
+        API.getAllBooks(term).then(res => this.state.allBooks = res.data).catch(err => alert("Search error - " + err));
+        this.state.books = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).includes(term)).toArray();
     }
 
     // topResults(term) {
@@ -126,8 +129,6 @@ class BookList extends Component {
     // }
 
     returnList() {
-        console.log('Book length ' + this.state.books.length);
-        console.log('Book list ' + this.state.books);
         if (this.state.books.length !== 0 && this.state.books !== "0 results")
         {
             var bookList = this.state.books.map(function(book, index){

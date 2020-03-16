@@ -1,6 +1,6 @@
 const mongodbConnection = require("../dbconfig/connection.js");
 const search = {
-    getSearchResult: (data, cb) => {
+    getAllBooks: (data, cb) => {
         const collection = mongodbConnection.db().collection("Book");
         collection.find({}).toArray((err, result) => {
             if (!err) {
