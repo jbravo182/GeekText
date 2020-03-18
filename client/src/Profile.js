@@ -18,7 +18,6 @@ function Profile() {
   return (
     <Router>
       <NavibarComponent/>
-      <Route path="/register" component={CreateAccountForm}/>
       <PrivateRoute path="/editProfile" component={() => <EditProfileComponent userEmail={Auth.getProfile().username}/>}/>
     </Router>
   );
