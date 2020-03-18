@@ -124,7 +124,10 @@ class Header extends Component {
                 <div>
                     <NavLink style={{ textDecoration: 'none',  color: 'black'}} 
                                 to="/Profile"
-                                >Login / Register </NavLink>
+                                >Login  </NavLink>
+                    <NavLink style={{ textDecoration: 'none',  color: 'black'}} 
+                                to="/Register"
+                                >Register  </NavLink>
                     <NavLink style={{ textDecoration: 'none',  color: 'black'}} 
                                 to="/ShoppingCart"
                                 >Shopping Cart </NavLink>
