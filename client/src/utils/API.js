@@ -81,9 +81,10 @@ export default {
         let token = localStorage.getItem("auth_token");
         return axios.post('/api/search/getSearchResults', data, {headers: {
             'x-access-token':token
-        }}),
+        }});
+    },
     getAllBooks: function(data){
-        return axios.post('/api/search/getAllBooks', data)
+        return axios.post('/api/search/getAllBooks', data);
     },
     add: function(data) {
         return axios.post('/api/ShoppingCart/add', data);
