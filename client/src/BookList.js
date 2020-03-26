@@ -80,7 +80,6 @@ class BookList extends Component {
         console.log(this.state);
         if (this.props.match.params.term === nextProps.match.params.term && this.state.books.length === nextState.books.length && nextState.order === this.state.order)
         {
-            
             return false;
         }
         else
@@ -120,7 +119,57 @@ class BookList extends Component {
 
     retriveResults(term) {
         API.getAllBooks(term).then(res => this.state.allBooks = res.data).catch(err => alert("Search error - " + err));
-        this.state.books = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).includes(term)).toArray();
+        switch(this.state.sort.toLowerCase())
+        {
+            case "title":
+                if (this.state.order === 'ASC')
+                {
+                    console.log('Entered');
+                    this.state.books = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.title).toArray();
+                }
+                else
+                {
+                    console.log('Another');
+                    this.state.books = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.title).toArray();
+                }
+                break;
+            case "author":
+                if (this.state.order === 'ASC')
+                {
+                    console.log('Entered2');
+                    this.state.books = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.author).toArray();
+                }
+                else
+                {
+                    console.log('Another2');
+                    this.state.books = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.author).toArray();
+                }
+                break;
+            case "genre":
+                if (this.state.order === 'ASC')
+                {
+                    console.log('Entered3');
+                    this.state.books = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.genre).toArray();
+                }
+                else
+                {
+                    console.log('Another3');
+                    this.state.books = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.genre).toArray();
+                }
+                break;
+            case "price":
+                if (this.state.order === 'ASC')
+                {
+                    console.log('Entered4');
+                    this.state.books = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.price).toArray();
+                }
+                else
+                {
+                    console.log('Another4');
+                    this.state.books = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.price).toArray();
+                }
+                break;
+        }
     }
 
     // topResults(term) {
@@ -157,7 +206,7 @@ class BookList extends Component {
 
             <div>
                 {this.showNoResults()}
-                <button id= "searchText" >TOP BOOKS</button>
+                {/* <button id= "searchText" >TOP BOOKS</button> */}
                 
                 <ListContainer>
 
@@ -186,10 +235,12 @@ total = {this.state.books.length}
             
             <div id="listContainer">
 
-            <input onFocus={this.setTextBoxListner} 
-                    id="searchText"  
-                    placeholder="Author, Genre, Title "
-                    onChange={this.handleSearch}/>
+            <select defaultValue = {this.state.sort}>
+            <option value ={"title"}>TITLE</option>
+            <option value ={"author"}>AUTHOR</option>
+            <option value ={"genre"}>GENRE</option>
+            <option value ={"price"}>PRICE</option>
+            </select>
                 
                 {/* <button id="topSearch"  onClick = {() => this.topResults(this.props.match.params.term)}>Top Sellers</button> */}
            
