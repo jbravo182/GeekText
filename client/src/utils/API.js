@@ -75,20 +75,37 @@ export default {
                 'x-access-token': token
             }});
     },
+    getSearchResults: function(data){
+        console.log('Doing post');
+        console.log('Data in post ' + data);
+        let token = localStorage.getItem("auth_token");
+        return axios.post('/api/search/getSearchResults', data, {headers: {
+            'x-access-token':token
+        }});
+    },
     getAllBooks: function(data){
-        return axios.post('/api/search/getAllBooks', data)
+        return axios.post('/api/search/getAllBooks', data);
     },
     add: function(data) {
-        return axios.post('/api/ShoppingCart/add', data);
+        let token = localStorage.getItem("auth_token");
+        return axios.post('/api/ShoppingCart/add', data, {headers: {
+            'x-access-token': token
+        }});
     },
     delete: function(data) {
-        return axios.post('/api/ShoppingCart/delete', data);
+        let token = localStorage.getItem("auth_token");
+        return axios.post('/api/ShoppingCart/delete', {headers: {
+            'x-access-token': token
+        }});
     },
     displayAll: function(data) {
         return axios.post('/api/ShoppingCart/displayAll', data);
     },
     componentDidMount: function(data) {
         console.log("I reached componentDidMount");
-        return axios.get('/api/ShoppingCart', data);
+        let token = localStorage.getItem("auth_token");
+        return axios.get('/api/ShoppingCart/displayAll', {headers: {
+            'x-access-token': token
+        }});
     },
 };
