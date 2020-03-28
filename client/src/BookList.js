@@ -1,10 +1,13 @@
 import React, {Component} from "react";
+import "./ModalImage.css"
 import List from "./List";
-import API from './utils/API';
+import ModalCover from "./ModalCover";
 import styled from "styled-components";
 import axios from 'axios';
 import Pagination from "react-js-pagination";
 import linq from "linq";
+import API from './utils/API';
+//import 'rc-pagination/assets/index.css';
 
 const pageSize = 10;
 
@@ -25,7 +28,7 @@ class BookList extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            allBooks: [],
+			allBooks: [],
             books: [],
             fi:[],
             onPage: 1,
@@ -43,10 +46,14 @@ class BookList extends Component {
         this.changeState = this.changeState.bind(this);
         this.ASC = this.ASC.bind(this);
         this.DESC = this.DESC.bind(this);
+        this.setOrder = this.setOrder.bind(this);
+        this.setFilter = this.setFilter.bind(this);
         this.ASC.handlePageChange = this.handlePageChange.bind(this);
+        this.DESC.handlePageChange = this.handlePageChange.bind(this);
     }
 
-    componentDidMount() {
+    componentDidMount() 
+    {
         this.retriveResults(this.props.match.params.term);
         if(this.props.pageSize){
             this.setState({size: this.props.pageSize});
@@ -54,8 +61,10 @@ class BookList extends Component {
     }
 
 
-    handlePageChange(pageNumber) {
+    handlePageChange(pageNumber) 
+    {
             console.log(`active page is ${pageNumber}`);
+          //  this.setState({activePage: pageNumber});
         axios.get("http://localhost:3000/#/bookList?page="+ pageNumber).then.setState({
             books:this.props.books,
             itemsCountPerPage: this.props.itemsCountPerPage,
@@ -67,7 +76,8 @@ class BookList extends Component {
    
 
     
-    onChangePage = (page) =>{
+    onChangePage = (page) =>
+    {
         console.log(Math.ceil(this.state.books.length/pageSize));
         this.setState({
             onPage: page,
@@ -75,7 +85,8 @@ class BookList extends Component {
 
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps, nextState) 
+    {
         console.log(nextState);
         console.log(this.state);
         if (this.props.match.params.term === nextProps.match.params.term && this.state.books.length === nextState.books.length && nextState.order === this.state.order)
@@ -91,8 +102,6 @@ class BookList extends Component {
             
             return true;
         }
-       
-        
     }
 
     changeState(response) {
@@ -101,18 +110,28 @@ class BookList extends Component {
         });
     }
    
+    setOrder(event)
+    {
+        console.log('TEst ' + event.target.value);
+        this.setState({order: event.target.value});
+    }
 
-   
-   
+    setFilter(event)
+    {
+        console.log("Another " + event.target.value);
+        this.setState({sort: event.target.value});
+    }
 
     DESC(event){
         console.log(event.target.value);
         this.setState({order: event.target.value});
+        //this.forceUpdate();
     }
     
     ASC(event){
         console.log(event.target.value);
         this.setState({order: event.target.value});
+        //this.forceUpdate();
     }
 
     
@@ -125,48 +144,48 @@ class BookList extends Component {
                 if (this.state.order === 'ASC')
                 {
                     console.log('Entered');
-                    this.state.books = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.title).toArray();
+                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.title).toArray()});
                 }
                 else
                 {
                     console.log('Another');
-                    this.state.books = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.title).toArray();
+                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.title).toArray()});
                 }
                 break;
             case "author":
                 if (this.state.order === 'ASC')
                 {
                     console.log('Entered2');
-                    this.state.books = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.author).toArray();
+                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.author).toArray()});
                 }
                 else
                 {
                     console.log('Another2');
-                    this.state.books = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.author).toArray();
+                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.author).toArray()});
                 }
                 break;
             case "genre":
                 if (this.state.order === 'ASC')
                 {
                     console.log('Entered3');
-                    this.state.books = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.genre).toArray();
+                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.genre).toArray()});
                 }
                 else
                 {
                     console.log('Another3');
-                    this.state.books = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.genre).toArray();
+                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.genre).toArray()});
                 }
                 break;
             case "price":
                 if (this.state.order === 'ASC')
                 {
                     console.log('Entered4');
-                    this.state.books = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.price).toArray();
+                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.price).toArray()});
                 }
                 else
                 {
                     console.log('Another4');
-                    this.state.books = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.price).toArray();
+                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.price).toArray()});
                 }
                 break;
         }
@@ -192,24 +211,20 @@ class BookList extends Component {
         if (this.state.books.length === 0)
         {
             return <NoResultsContainer>
-                    <p>No titles found (0 hits) - Try these tips:</p>
-                    <p>Try a different kind of search:</p>
-                    <p>Do a browse search by title, typing just the first few letters of the title.</p>
-                    <p>Do a browse search by author, typing just the first few letters of the author's first or last name.</p>
-                    <p>Do a browse search by genre, typing just the first few letters of the genre</p>
+                    <p>No titles found (0 hits)</p>
                 </NoResultsContainer>;
         }
     }
 
     render() { 
+      //  this.retriveResults();
         return ( 
 
             <div>
-                {this.showNoResults()}
-                {/* <button id= "searchText" >TOP BOOKS</button> */}
-                
+                {this.showNoResults()}              
                 <ListContainer>
 
+                    <ModalCover></ModalCover>
                     <Pagination class = "d-flex justify-content-center"
 activePage={this.state.activePage}
 totalItemsCount={this.state.totalItemsCount}
@@ -226,23 +241,23 @@ total = {this.state.books.length}
                     
                 </ListContainer>
                 <p>ORDER THE BOOKS</p>
-            <select defaultValue = {this.state.order} onChange = {this.ASC}>
-            <option value ={"ASC"} onClick = {this.ASC} >DESCENDING</option>
-            <option value ={"DESC"}onClick = {this.DESC} >ASCENDING</option>
+            <select id = "orderDropdown" defaultValue = {this.state.order} onChange = {this.setOrder}>
+            <option value ={"DESC"}>DESCENDING</option>
+            <option value ={"ASC"}>ASCENDING</option>
             </select>
             
             {/* {this.topResults()} */}
             
             <div id="listContainer">
 
-            <select defaultValue = {this.state.sort}>
+            <select id = "filterDropdown" defaultValue = {this.state.order} onChange = {this.setFilter}>
             <option value ={"title"}>TITLE</option>
             <option value ={"author"}>AUTHOR</option>
-            <option value ={"genre"}>GENRE</option>
             <option value ={"price"}>PRICE</option>
+            <option value ={"genre"}>GENRE</option>
             </select>
                 
-                {/* <button id="topSearch"  onClick = {() => this.topResults(this.props.match.params.term)}>Top Sellers</button> */}
+                <button id="topSearch"  onClick = {() => this.topResults(this.props.match.params.term)}>Top Books</button>
            
             </div>
         
