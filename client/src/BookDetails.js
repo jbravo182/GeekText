@@ -1,16 +1,23 @@
 import React, { Component } from 'react'; //server related
-import { Pagination, PaginationItem, PaginationLink, Media } from 'react-bootstrap'; //pagination library
-import { ListGroup } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
 import axios from 'axios';
-import API from "./utils/API";
-import { render } from "react-dom";
 import './index.css';
 import book from "./book.jpg";
 import Tabs from './Tabs';
-
 require('./details.css');
 
+const Book = props => (
+  <tr>
+    <td>{props.books.title}</td>
+    <td>{props.books.author}</td>
+    <td>{props.books.description}</td>
+    <td>{props.books.cover}</td>
+    <td>{props.books.pubisher}</td>
+    <td>{props.books.genre}</td>
+    <td>{props.books.pub_date}</td>
+    <td>{props.books.price}</td>
+  </tr>
+)
 class BookDetails extends Component{
   constructor(props) {
     super(props);
@@ -18,37 +25,72 @@ class BookDetails extends Component{
       title: '',
       author: '',
       description: '',
-      publishing: 'N/A',
+      cover: '',
+      pubisher: '',
+      genre: '',
+      pub_date: '',
+      price: ''
     }
   }
     componentDidMount() {
-      
-      // GET BOOK DETAILS: 
-      axios.get("api/book/1")// /book/${props.id}
+      axios.get('http://localhost:3000/api/books/5e7cc5a8e5de4c1fd85e28dd')
       .then(response => {
-        console.log(response, "KEVIN response")
         this.setState({
-            title: response.data.title,
-            author: response.data.author,
-            description: response.data.description,
-            publishing: response.data.publishing
-        })
-      }).catch(function (error) { console.log(error);})
+          title: response.data.username,
+          author: response.data.author,
+          description: response.data.description,
+          cover: response.data.cover,
+          publisher: response.data.publisher,
+          genre: response.data.genre,
+          pub_date: response.data.pub_date,
+          price: response.data.price,     
+        })   
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+      console.log(this.state.title,)
+    }
+
+    displayAuthor() {
+      return this.state.author;
+    }
+
+    displayDescription() {
+      return this.state.description;
+    }
+
+    displayPub_info() {
+      return this.state.publisher;
+    }
+
+    displayCover() {
+      return this.state.cover;
     }
     render (){
     return (<div>
       <h1>Book Details</h1>
-      <img src={book} />
+      <img
+          width={180}
+          height={270}
+          src= { this.displayCover() }
+       />
       <div>Ratings: *****</div>
       <Tabs>
         <div label="Author">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        <tbody>
+            { this.displayAuthor() }
+        </tbody>
         </div>
         <div label="Descripton">
-          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        <tbody>
+            { this.displayDescription() }
+        </tbody>
         </div>
         <div label="Publishing Info">
-          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        <tbody>
+            { this.displayPub_info() }
+        </tbody>
         </div>
         <div label="Comments">
           Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
