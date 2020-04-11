@@ -7,6 +7,7 @@ import axios from 'axios';
 import Pagination from "react-js-pagination";
 import linq from "linq";
 import API from './utils/API';
+//import Pagination from './Pagination';
 //import 'rc-pagination/assets/index.css';
 
 const pageSize = 10;
@@ -23,6 +24,7 @@ const NoResultsContainer = styled.div`
 `;
 
 var topSellerClicked = false;
+var pageButtonClicked = false;
 
 class BookList extends Component {
     constructor(props) {
@@ -31,6 +33,7 @@ class BookList extends Component {
 			allBooks: [],
             books: [],
             fi:[],
+            pageOfItems: [],
             onPage: 1,
             order: "ASC",
             pageSize:10,
@@ -43,71 +46,42 @@ class BookList extends Component {
         this.retriveResults = this.retriveResults.bind(this);
         this.returnList = this.returnList.bind(this);
         this.showNoResults = this.showNoResults.bind(this);
-        this.changeState = this.changeState.bind(this);
-        this.ASC = this.ASC.bind(this);
-        this.DESC = this.DESC.bind(this);
         this.setOrder = this.setOrder.bind(this);
         this.setFilter = this.setFilter.bind(this);
-        this.ASC.handlePageChange = this.handlePageChange.bind(this);
-        this.DESC.handlePageChange = this.handlePageChange.bind(this);
     }
 
     componentDidMount() 
     {
+        console.log('DidMount');
         this.retriveResults(this.props.match.params.term);
-        if(this.props.pageSize){
+        if(this.props.pageSize > 0){
             this.setState({size: this.props.pageSize});
           }
     }
-
-
-    handlePageChange(pageNumber) 
-    {
-            console.log(`active page is ${pageNumber}`);
-          //  this.setState({activePage: pageNumber});
-        axios.get("http://localhost:3000/#/bookList?page="+ pageNumber).then.setState({
-            books:this.props.books,
-            itemsCountPerPage: this.props.itemsCountPerPage,
-            totalItemsCount: this.props.totalItemsCount,
-            activePage: this.props.activePage
-        });    
-        
-     }
-   
-
     
-    onChangePage = (page) =>
-    {
-        console.log(Math.ceil(this.state.books.length/pageSize));
-        this.setState({
-            onPage: page,
-        });
-
-    }
 
     shouldComponentUpdate(nextProps, nextState) 
     {
         console.log(nextState);
         console.log(this.state);
-        if (this.props.match.params.term === nextProps.match.params.term && this.state.books.length === nextState.books.length && nextState.order === this.state.order)
+        if (this.props.match.params.term === nextProps.match.params.term && this.state.books.length === nextState.books.length && nextState.order === this.state.order && nextState.sort === this.state.sort)
         {
+            console.log('Entered');
+            console.log(nextProps.match.params.term + ' ' + nextState.books.length + ' ' + nextState.order + ' ' + nextState.sort);
+            console.log(this.props.match.params.term + ' ' + this.state.books.length + ' ' + nextState.order + ' ' + this.state.setFilter);
             return false;
         }
         else
         {
-            if (!topSellerClicked)
+            if (!topSellerClicked && !pageButtonClicked)
             {
                 this.retriveResults(nextProps.match.params.term);
             }
             
+            topSellerClicked = false;
+            pageButtonClicked = false;
             return true;
         }
-    }
-
-    changeState(response) {
-        this.setState({
-            books: response
-        });
     }
    
     setOrder(event)
@@ -121,19 +95,6 @@ class BookList extends Component {
         console.log("Another " + event.target.value);
         this.setState({sort: event.target.value});
     }
-
-    DESC(event){
-        console.log(event.target.value);
-        this.setState({order: event.target.value});
-        //this.forceUpdate();
-    }
-    
-    ASC(event){
-        console.log(event.target.value);
-        this.setState({order: event.target.value});
-        //this.forceUpdate();
-    }
-
     
 
     retriveResults(term) {
@@ -143,60 +104,76 @@ class BookList extends Component {
             case "title":
                 if (this.state.order === 'ASC')
                 {
-                    console.log('Entered');
-                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.title).toArray()});
+                    var tempBooks = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.title).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10));
+                    this.setState({books: tempBooks});
                 }
                 else
                 {
-                    console.log('Another');
-                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.title).toArray()});
+                    var tempBooks = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.title).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10));
+                    this.setState({books: tempBooks});
                 }
                 break;
             case "author":
                 if (this.state.order === 'ASC')
                 {
-                    console.log('Entered2');
-                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.author).toArray()});
+                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.author).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
                 }
                 else
                 {
-                    console.log('Another2');
-                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.author).toArray()});
+                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.author).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
                 }
                 break;
             case "genre":
                 if (this.state.order === 'ASC')
                 {
-                    console.log('Entered3');
-                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.genre).toArray()});
+                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.genre).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
                 }
                 else
                 {
-                    console.log('Another3');
-                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.genre).toArray()});
+                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.genre).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
                 }
                 break;
-            case "price":
+            case "date":
                 if (this.state.order === 'ASC')
                 {
-                    console.log('Entered4');
-                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.price).toArray()});
+                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.pub_date).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
                 }
                 else
                 {
-                    console.log('Another4');
-                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.price).toArray()});
+                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.pub_date).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
                 }
                 break;
         }
     }
 
-    // topResults(term) {
-    //     topSellerClicked = true;
-    //     ServerCall("topSearchInfo", term, this.changeState);
-    // }
+    topResults() 
+    {
+        topSellerClicked = true;
+        this.setState({books: linq.from(this.state.allBooks).where(x => x.topSeller).orderBy(x => x.title).toArray()});
+    }
 
-    returnList() {
+    previousPage()
+    {
+        if(this.state.activePage !== 1)
+        {
+            pageButtonClicked = true;
+            this.setState({activePage: this.state.activePage - 1});
+        }
+    }
+
+    nextPage()
+    {
+        if(this.state.activePage <= this.state.books.length / 10)
+        {
+            pageButtonClicked = true;
+            this.setState({activePage: this.state.activePage + 1});
+        }
+    }
+
+
+
+    returnList() 
+    {
         if (this.state.books.length !== 0 && this.state.books !== "0 results")
         {
             var bookList = this.state.books.map(function(book, index){
@@ -207,7 +184,8 @@ class BookList extends Component {
         }
     }
 
-    showNoResults() {
+    showNoResults()
+    {
         if (this.state.books.length === 0)
         {
             return <NoResultsContainer>
@@ -217,7 +195,6 @@ class BookList extends Component {
     }
 
     render() { 
-      //  this.retriveResults();
         return ( 
 
             <div>
@@ -225,23 +202,12 @@ class BookList extends Component {
                 <ListContainer>
 
                     <ModalCover></ModalCover>
-                    <Pagination class = "d-flex justify-content-center"
-activePage={this.state.activePage}
-totalItemsCount={this.state.totalItemsCount}
-itemsCountPerPage={this.state.itemsCountPerPage}
-totalItemsCount={this.state.totalItemsCount}
-pageRangeDisplayed={this.state.pageRangeDisplayed}
-onChange={this.handlePageChange}
-itemClass='page-item'
-linkClass= 'page-link'
-total = {this.state.books.length}
-                        /> 
                     {this.returnList()}
 
                     
                 </ListContainer>
                 <p>ORDER THE BOOKS</p>
-            <select id = "orderDropdown" defaultValue = {this.state.order} onChange = {this.setOrder}>
+            <select id = "orderDropdown" defaultValue = {"ASC"} onChange = {this.setOrder}>
             <option value ={"DESC"}>DESCENDING</option>
             <option value ={"ASC"}>ASCENDING</option>
             </select>
@@ -250,18 +216,19 @@ total = {this.state.books.length}
             
             <div id="listContainer">
 
-            <select id = "filterDropdown" defaultValue = {this.state.order} onChange = {this.setFilter}>
+            <select id = "filterDropdown" defaultValue = {"title"} onChange = {this.setFilter}>
             <option value ={"title"}>TITLE</option>
             <option value ={"author"}>AUTHOR</option>
             <option value ={"price"}>PRICE</option>
-            <option value ={"genre"}>GENRE</option>
+            <option value ={"date"}>DATE</option>
             </select>
                 
                 <button id="topSearch"  onClick = {() => this.topResults(this.props.match.params.term)}>Top Books</button>
            
             </div>
+            <button id="previousPage"  onClick = {() => this.previousPage()}>Previous Page</button>
+            <button id="nextPage"  onClick = {() => this.nextPage()}>Next Page</button>
         
-          
             </div>
          );
     }
