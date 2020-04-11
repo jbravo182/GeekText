@@ -1,0 +1,15 @@
+{ "item":
+    [
+        {
+            "userEmail": "test@gmail.com",
+            "bookName": "The Sound and the Fury",
+            "bookImageURL": "https://deepblue.lib.umich.edu/bitstream/handle/2027.42/108166/sf87.jpg",
+            "bookDescription": "The Sound and the Fury is a novel by the American author William Faulkner...",
+            "bookID": 4,
+            "bookPrice": 5.99,
+            "bookQty": 1
+        
+        }
+            
+    ]
+    }

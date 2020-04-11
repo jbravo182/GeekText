@@ -1,6 +1,4 @@
 import axios from "axios";
-
-
 export default {
     //Gets all Campaign names
     login: function (data) {
@@ -87,16 +85,37 @@ export default {
         return axios.post('/api/search/getAllBooks', data);
     },
     add: function(data) {
-        return axios.post('/api/ShoppingCart/add', data);
+        let token = localStorage.getItem("auth_token");
+        return axios.post('/api/ShoppingCart/add', data, {headers: {
+            'x-access-token': token
+        }});
     },
     delete: function(data) {
-        return axios.post('/api/ShoppingCart/delete', data);
+        let token = localStorage.getItem("auth_token");
+        return axios.post('/api/ShoppingCart/delete', {headers: {
+            'x-access-token': token
+        }});
     },
     displayAll: function(data) {
         return axios.post('/api/ShoppingCart/displayAll', data);
     },
     componentDidMount: function(data) {
         console.log("I reached componentDidMount");
-        return axios.get('/api/ShoppingCart', data);
+        let token = localStorage.getItem("auth_token");
+        return axios.get('/api/ShoppingCart/displayAll', {headers: {
+            'x-access-token': token
+        }});
+    },
+    updateShopCartList: function(data, type) {
+        return axios.post('/api/ShoppingCart/update', data, type);
+    },
+    getList: function(data, type) {
+        return axios.post('/api/ShoppingCart/list', data, type);
+    },
+    fileWriteCart: function(data) {
+        return axios.post('/api/ShoppingCart/upload_cart', data);
+    },
+    fileWriteSave: function(data) {
+        return axios.post('/api/ShoppingCart/upload_save', data);
     },
 };
