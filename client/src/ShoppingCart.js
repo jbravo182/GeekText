@@ -47,8 +47,9 @@ class ShoppingCart extends Component {
     //remove button
     this.removeShopCart_ButtonHandle = this.removeShopCart_ButtonHandle.bind(this);
     this.removesSaveLater_ButtonHandle = this.removeSaveLater_ButtonHandle.bind(this);
+
   }
-  
+
   //DB related task
   dbStateLoadAssign()
   {

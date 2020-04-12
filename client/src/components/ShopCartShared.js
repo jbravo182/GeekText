@@ -89,7 +89,7 @@ class ShopCartShared extends Component
     
   }
 
-    SCadd_handleSubmit(obj, itemIndex, dbStringPersonal, event)
+    SCadd_handleSubmit(event)
     {
         var index = 0;
         var destinationID = 'ShopCart';
@@ -118,8 +118,8 @@ class ShopCartShared extends Component
         tempString += "\"bookImageURL\":\"" + bookImageURL + "\",";
         tempString += "\"bookDescription\":\"" + bookDescription + "\",";
         tempString += "\"bookID\":" + bookID + ",";
-        tempString += "\"bookID\":" + bookPrice + ",";
-        tempString += "\"bookID\":" + bookQty;
+        tempString += "\"bookPrice\":" + bookPrice + ",";
+        tempString += "\"bookQty\":" + bookQty;
         
         tempString += "}";
         //end of string element setup
@@ -141,7 +141,7 @@ class ShopCartShared extends Component
       return (
          
          <React.Fragment>
-           <Button variant="outline-dark" onClick={(e) => this.SCadd_handleSubmit(obj, itemIndex, dbStringPersonal, e)}><u>add to shopcart</u>> 
+           <Button variant="outline-dark" onClick={(e) => this.SCadd_handleSubmit(e)}><u>add to shopcart</u>> 
 
            </Button>
           </React.Fragment>
