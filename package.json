@@ -31,9 +31,11 @@
     "linq": "^3.2.2",
     "mongodb": "^3.5.2",
     "mongoose": "^5.9.7",
+    "nodemon": "^2.0.2",
+
     "react": "^16.12.0",
     "react-bootstrap": "^1.0.0-beta.16",
-    "react-dom": "^16.12.0",
+    "react-dom": "^16.13.0",
     "react-icon-base": "^2.1.2",
     "react-js-pagination": "^3.0.3",
     "react-redux": "^7.1.3",

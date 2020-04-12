@@ -5,14 +5,15 @@ import SearchArea from './SearchArea';
 import BookList from './BookList';
 import HomePage from './HomePage';
 import Profile from './Profile';
+import Register from './components/profilemanagement/CreateAccountForm';
 import ShoppingCart from './ShoppingCart';
-import Tab from './Tab';
+import BookDetails from './BookDetails';
 import Wishlist from './components/WishList';
 import Reviews from './Reviews';
 
 class App extends Component {
-
     render() {
+        // const bookid = 1;
         return (
             <HashRouter>
                 <div>
@@ -22,8 +23,10 @@ class App extends Component {
                             <Route path="/bookList/:term" component={BookList}/>
                             <Route path="/HomePage" component={HomePage}/>
                             <Route path="/Profile" component={Profile}/>
+                            <Route path="/Register" component={Register}/>
                             <Route path="/ShoppingCart" component={ShoppingCart}/>
-                            <Route path="/BookDetails" component={Tab}/>
+                            {/* <Route path="/BookDetails" render={bookid => (<BookDetails {bookid}/>)}> */}
+                            <Route path="/BookDetails" component= {BookDetails}/>
                             <Route path="/Wishlist" component={Wishlist}/>
                             <Route path="/Reviews" component={Reviews}/>
                         </div>
