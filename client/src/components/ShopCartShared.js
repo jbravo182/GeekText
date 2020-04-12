@@ -26,7 +26,6 @@ class ShopCartShared extends Component
         };
     
         //ShopCarthandlers 
-        this.removesSaveLater_ButtonHandle = this.removeSaveLater_ButtonHandle.bind(this);
         this.SCadd_handleSubmit = this.SCadd_handleSubmit.bind(this);
     }
 
