@@ -3,10 +3,9 @@ import "./ModalImage.css"
 import List from "./List";
 import ModalCover from "./ModalCover";
 import styled from "styled-components";
-import axios from 'axios';
-import Pagination from "react-js-pagination";
 import linq from "linq";
 import API from './utils/API';
+import StarRatings from 'react-star-ratings';
 //import Pagination from './Pagination';
 //import 'rc-pagination/assets/index.css';
 
@@ -30,7 +29,8 @@ class BookList extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-			allBooks: [],
+            allBooks: [],
+            searchedBooks: [],
             books: [],
             fi:[],
             pageOfItems: [],
@@ -41,13 +41,15 @@ class BookList extends Component {
             itemsCountPerPage: 1,
             pageRangeDisplayed: 4,
             totalItemsCount: 1,
-            sort: "title"
+            sort: "title",
+            rating: 0
         };
         this.retriveResults = this.retriveResults.bind(this);
         this.returnList = this.returnList.bind(this);
         this.showNoResults = this.showNoResults.bind(this);
         this.setOrder = this.setOrder.bind(this);
         this.setFilter = this.setFilter.bind(this);
+        this.changeRating = this.changeRating.bind(this);
     }
 
     componentDidMount() 
@@ -64,11 +66,9 @@ class BookList extends Component {
     {
         console.log(nextState);
         console.log(this.state);
-        if (this.props.match.params.term === nextProps.match.params.term && this.state.books.length === nextState.books.length && nextState.order === this.state.order && nextState.sort === this.state.sort)
+        if (this.props.match.params.term === nextProps.match.params.term && this.state.books.length === nextState.books.length && nextState.order === this.state.order && nextState.sort === this.state.sort && nextState.rating === this.state.rating)
         {
-            console.log('Entered');
-            console.log(nextProps.match.params.term + ' ' + nextState.books.length + ' ' + nextState.order + ' ' + nextState.sort);
-            console.log(this.props.match.params.term + ' ' + this.state.books.length + ' ' + nextState.order + ' ' + this.state.setFilter);
+
             return false;
         }
         else
@@ -86,14 +86,117 @@ class BookList extends Component {
    
     setOrder(event)
     {
-        console.log('TEst ' + event.target.value);
-        this.setState({order: event.target.value});
+        switch(this.state.sort.toLowerCase())
+        {
+            case "title":
+                if (event.target.value === 'ASC')
+                {
+                    var tempBooks = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(this.props.match.params.term.toLowerCase()) && x.avg_rating >= this.state.rating).orderBy(x => x.title).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10));
+                    this.setState({order: event.target.value, books: tempBooks});
+                }
+                else
+                {
+                    var tempBooks = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(this.props.match.params.term.toLowerCase()) && x.avg_rating >= this.state.rating).orderByDescending(x => x.title).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10));
+                    this.setState({order: event.target.value, books: tempBooks});
+                }
+                break;
+            case "author":
+                if (event.target.value === 'ASC')
+                {
+                    this.setState({order: event.target.value, books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(this.props.match.params.term.toLowerCase()) && x.avg_rating >= this.state.rating).orderBy(x => x.author).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
+                }
+                else
+                {
+                    this.setState({order: event.target.value, books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(this.props.match.params.term.toLowerCase()) && x.avg_rating >= this.state.rating).orderByDescending(x => x.author).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
+                }
+                break;
+            case "price":
+                if (event.target.value === 'ASC')
+                {
+                    this.setState({order: event.target.value, books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(this.props.match.params.term.toLowerCase()) && x.avg_rating >= this.state.rating).orderBy(x => x.price).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
+                }
+                else
+                {
+                    this.setState({order: event.target.value, books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(this.props.match.params.term.toLowerCase()) && x.avg_rating >= this.state.rating).orderByDescending(x => x.price).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
+                }
+                break;
+            case "date":
+                if (event.target.value === 'ASC')
+                {
+                    this.setState({order: event.target.value, books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(this.props.match.params.term.toLowerCase()) && x.avg_rating >= this.state.rating).orderBy(x => x.pub_date).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
+                }
+                else
+                {
+                    this.setState({order: event.target.value, books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(this.props.match.params.term.toLowerCase()) && x.avg_rating >= this.state.rating).orderByDescending(x => x.pub_date).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
+                }
+                break;
+        }
+        // if(event.target.value === 'ASC')
+        // {
+        //     var tempBooks = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(this.props.match.params.term.toLowerCase()) && x.avg_rating >= this.state.rating).orderBy(x => x.title).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10));
+        //     this.setState({
+        //         order: event.target.value,
+        //         books: tempBooks});
+        // }
+        // else
+        // {
+        //     var tempBooks = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(this.props.match.params.term.toLowerCase()) && x.avg_rating >= this.state.rating).orderByDescending(x => x.title).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10));
+        //     this.setState({
+        //         order: event.target.value,
+        //         books: tempBooks});
+        // }
+        
     }
 
     setFilter(event)
     {
-        console.log("Another " + event.target.value);
-        this.setState({sort: event.target.value});
+        //this.setState({sort: event.target.value});
+
+        switch(event.target.value)
+        {
+            case "title":
+                if (this.state.order === 'ASC')
+                {
+                    var tempBooks = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(this.props.match.params.term.toLowerCase()) && x.avg_rating >= this.state.rating).orderBy(x => x.title).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10));
+                    this.setState({sort: event.target.value, books: tempBooks});
+                }
+                else
+                {
+                    var tempBooks = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(this.props.match.params.term.toLowerCase()) && x.avg_rating >= this.state.rating).orderByDescending(x => x.title).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10));
+                    this.setState({sort: event.target.value, books: tempBooks});
+                }
+                break;
+            case "author":
+                if (this.state.order === 'ASC')
+                {
+                    this.setState({sort: event.target.value, books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(this.props.match.params.term.toLowerCase()) && x.avg_rating >= this.state.rating).orderBy(x => x.author).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
+                }
+                else
+                {
+                    this.setState({sort: event.target.value, books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(this.props.match.params.term.toLowerCase()) && x.avg_rating >= this.state.rating).orderByDescending(x => x.author).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
+                }
+                break;
+            case "price":
+                if (this.state.order === 'ASC')
+                {
+                    this.setState({sort: event.target.value, books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(this.props.match.params.term.toLowerCase()) && x.avg_rating >= this.state.rating).orderBy(x => x.price).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
+                }
+                else
+                {
+                    this.setState({sort: event.target.value, books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(this.props.match.params.term.toLowerCase()) && x.avg_rating >= this.state.rating).orderByDescending(x => x.price).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
+                }
+                break;
+            case "date":
+                if (this.state.order === 'ASC')
+                {
+                    this.setState({sort: event.target.value, books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(this.props.match.params.term.toLowerCase()) && x.avg_rating >= this.state.rating).orderBy(x => x.pub_date).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
+                }
+                else
+                {
+                    this.setState({sort: event.target.value, books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(this.props.match.params.term.toLowerCase()) && x.avg_rating >= this.state.rating).orderByDescending(x => x.pub_date).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
+                }
+                break;
+        }
     }
     
 
@@ -104,43 +207,43 @@ class BookList extends Component {
             case "title":
                 if (this.state.order === 'ASC')
                 {
-                    var tempBooks = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.title).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10));
+                    var tempBooks = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase()) && x.avg_rating >= this.state.rating).orderBy(x => x.title).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10));
                     this.setState({books: tempBooks});
                 }
                 else
                 {
-                    var tempBooks = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.title).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10));
+                    var tempBooks = linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase()) && x.avg_rating >= this.state.rating).orderByDescending(x => x.title).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10));
                     this.setState({books: tempBooks});
                 }
                 break;
             case "author":
                 if (this.state.order === 'ASC')
                 {
-                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.author).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
+                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase()) && x.avg_rating >= this.state.rating).orderBy(x => x.author).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
                 }
                 else
                 {
-                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.author).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
+                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase()) && x.avg_rating >= this.state.rating).orderByDescending(x => x.author).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
                 }
                 break;
-            case "genre":
+            case "price":
                 if (this.state.order === 'ASC')
                 {
-                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.genre).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
+                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase()) && x.avg_rating >= this.state.rating).orderBy(x => x.price).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
                 }
                 else
                 {
-                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.genre).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
+                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase()) && x.avg_rating >= this.state.rating).orderByDescending(x => x.price).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
                 }
                 break;
             case "date":
                 if (this.state.order === 'ASC')
                 {
-                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderBy(x => x.pub_date).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
+                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase()) && x.avg_rating >= this.state.rating).orderBy(x => x.pub_date).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
                 }
                 else
                 {
-                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase())).orderByDescending(x => x.pub_date).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
+                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase()) && x.avg_rating >= this.state.rating).orderByDescending(x => x.pub_date).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
                 }
                 break;
         }
@@ -194,6 +297,15 @@ class BookList extends Component {
         }
     }
 
+    changeRating( newRating) 
+    {
+        console.log(newRating);
+        this.setState(
+        {
+            rating: newRating
+        });
+    }
+
     render() { 
         return ( 
 
@@ -226,8 +338,18 @@ class BookList extends Component {
                 <button id="topSearch"  onClick = {() => this.topResults(this.props.match.params.term)}>Top Books</button>
            
             </div>
-            <button id="previousPage"  onClick = {() => this.previousPage()}>Previous Page</button>
-            <button id="nextPage"  onClick = {() => this.nextPage()}>Next Page</button>
+            <StarRatings
+                rating={this.state.rating}
+                starRatedColor="red"
+                changeRating={this.changeRating}
+                numberOfStars={5}
+                name='rating'
+            />
+            <div>
+                <button id="previousPage"  onClick = {() => this.previousPage()}>Previous Page</button>
+                <button id="nextPage"  onClick = {() => this.nextPage()}>Next Page</button>
+            </div>
+            
         
             </div>
          );
