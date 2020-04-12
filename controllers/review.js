@@ -24,9 +24,9 @@ const review = {
         });
     },
 
-    getOneBook: (data, cb) => {
-        const collection = mongodbConnection.db().collection("Book");
-        collection.findOne({title: data.title}, (findError, findResult) => {
+    getReview: (data, cb) => {
+        const collection = mongodbConnection.db().collection("Review");
+        collection.findOne({title: data.book_title}, (findError, findResult) => {
             if(findResult){
                 const {password, _id, ...rest} = findResult;
                 cb(200, title);

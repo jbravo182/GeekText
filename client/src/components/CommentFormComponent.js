@@ -14,6 +14,7 @@ export default class CommentFormComponent extends Component {
       value: props.name,
 
       comment: {
+        book_title: props.title,
         nickname: props.name,
         rating: 0,
         review: ""

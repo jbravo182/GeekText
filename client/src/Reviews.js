@@ -7,7 +7,6 @@ function App() {
 
   const[comments, setComments] = useState([]);
   const[loading, setLoading] = useState(false);
- 
 
   function addComment(comment) {
     setLoading(false);
@@ -15,11 +14,14 @@ function App() {
   }
 
 
+
+
+
   return (
     <div style={{'marginLeft':'20px'}}>
     <h1>Review [Book Title]</h1> 
     <h2>Rating</h2>
-    <CommentFormComponent name = "nickname" addComment={addComment} />
+    <CommentFormComponent title="American Psycho" name = "nickname" addComment={addComment} />
       </div>
   );
 }
