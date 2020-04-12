@@ -99,4 +99,17 @@ export default {
         console.log("I reached componentDidMount");
         return axios.get('/api/ShoppingCart', data);
     },
+    createReview: function (data) {
+        return axios.post('/api/review/createReview', data);
+    },
+    getNickname: function (data) {
+        return axios.post('/api/review/getNickname', data);
+    },
+    getOneBook: function(data) {
+        return axios.post('/api/review/getOneBook', data);
+    },
+    addAverageRating: function(data) {
+        return axios.post('/api/review/addAverageRating', data);
+    }
+
 };
