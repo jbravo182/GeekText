@@ -16,6 +16,13 @@ const authorSchema = new Schema({
     unique: true,
     trim: true,
     minlength: 3
+  },
+  pic : {
+    type: String,
+    required: true,
+    unique: false,
+    trim: true,
+    minlength: 3
   }
 }, {collection: 'Author'}, { versionKey: false });
 

@@ -1,5 +1,7 @@
 const router = require('express').Router();
 let Author = require('../../models/author.model');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
 router.route('/').get((req, res) => {
   Author.find()
@@ -8,10 +10,8 @@ router.route('/').get((req, res) => {
 });
 
 router.route('/add').post((req, res) => {
-  const name = req.body.name;
-  const bio = req.body.bio;
-
-  const newAuthor = new Author({name, bio});
+  const {name, bio, pic} = req.body
+  const newAuthor = new Author({name, bio, pic});
 
   newAuthor.save()
     .then(() => res.json('Author added!'))
@@ -24,17 +24,36 @@ router.route('/:id').get((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
+router.route('/books/:id').get((req, res) => {
+  Author.aggregate([
+      { "$match": { "_id": ObjectId(req.params.id) } },
+      {
+      '$lookup':
+        {
+          from: "Book",
+          localField: "_id",
+          foreignField: "authorId",
+          as: "books"
+        }
+   }])
+  .then(book => res.json(book))
+  .catch(err => res.status(400).json('Error: ' + err));
+});
+
 router.route('/:id').delete((req, res) => {
   Author.findByIdAndDelete(req.params.id)
     .then(() => res.json('Author deleted.'))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
+
 router.route('/update/:id').post((req, res) => {
+  const {name, bio, pic} = req.body
   Author.findById(req.params.id)
     .then(author => {
-        author.name = req.body.name;
-        author.bio = req.body.bio;
+        author.name = name;
+        author.bio = bio;
+        author.pic = pic;
         author.save()
         .then(() => res.json('Author updated!'))
         .catch(err => res.status(400).json('Error: ' + err));
