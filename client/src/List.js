@@ -34,9 +34,11 @@ const List = (book) => {
                 <BookListContainer>
                     <CoverContainer>
                         <img id="cover" 
-                                src={book.bookInfo.cover} 
-                                alt="Image not available" 
-                                onClick={ function () {showModal(book)}}>
+                            width={150}
+                            height={256}
+                            src={book.bookInfo.cover} 
+                            alt="Image not available" 
+                            onClick={ function () {showModal(book)}}>
                         </img>
                     </CoverContainer>
                     <DetailContainer>
