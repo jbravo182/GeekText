@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import CreateAccountForm from './components/profilemanagement/CreateAccountForm';
 import EditProfileComponent from "./components/profilemanagement/EditProfileComponent";
 import NavibarComponent from "./components/NavibarComponent";
 import { BrowserRouter as Router, Route, Link} from "react-router-dom";
@@ -18,7 +17,6 @@ function Profile() {
   return (
     <Router>
       <NavibarComponent/>
-      <Route path="/register" component={CreateAccountForm}/>
       <PrivateRoute path="/editProfile" component={() => <EditProfileComponent userEmail={Auth.getProfile().username}/>}/>
     </Router>
   );
