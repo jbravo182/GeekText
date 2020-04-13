@@ -1,4 +1,7 @@
+
 import axios from "axios";
+
+
 export default {
     //Gets all Campaign names
     login: function (data) {
@@ -85,26 +88,29 @@ export default {
         return axios.post('/api/search/getAllBooks', data);
     },
     add: function(data) {
-        let token = localStorage.getItem("auth_token");
-        return axios.post('/api/ShoppingCart/add', data, {headers: {
-            'x-access-token': token
-        }});
+        return axios.post('/api/ShoppingCart/add', data);
     },
     delete: function(data) {
-        let token = localStorage.getItem("auth_token");
-        return axios.post('/api/ShoppingCart/delete', {headers: {
-            'x-access-token': token
-        }});
+        return axios.post('/api/ShoppingCart/delete', data);
     },
     displayAll: function(data) {
         return axios.post('/api/ShoppingCart/displayAll', data);
     },
     componentDidMount: function(data) {
         console.log("I reached componentDidMount");
-        let token = localStorage.getItem("auth_token");
-        return axios.get('/api/ShoppingCart/displayAll', {headers: {
-            'x-access-token': token
-        }});
+        return axios.get('/api/ShoppingCart', data);
+    },
+    createReview: function (data) {
+        return axios.post('/api/review/createReview', data);
+    },
+    getNickname: function (data) {
+        return axios.post('/api/review/getNickname', data);
+    },
+    getOneBook: function(data) {
+        return axios.post('/api/review/getOneBook', data);
+    },
+    addAverageRating: function(data) {
+        return axios.post('/api/review/addAverageRating', data);
     },
     updateShopCartList: function(data, type) {
         return axios.post('/api/ShoppingCart/update', data, type);
@@ -118,4 +124,5 @@ export default {
     fileWriteSave: function(data) {
         return axios.post('/api/ShoppingCart/upload_save', data);
     },
+
 };

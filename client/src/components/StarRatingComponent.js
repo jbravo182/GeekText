@@ -7,18 +7,6 @@ import { faStar } from '@fortawesome/free-solid-svg-icons';
 
 
 class StarRatingComponent extends Component {
-  static propTypes = {
-    name: PropTypes.string.isRequired,
-    value: PropTypes.number,
-    editing: PropTypes.bool,
-    starCount: PropTypes.number,
-    starColor: PropTypes.string,
-    onStarClick: PropTypes.func,
-    onStarHover: PropTypes.func,
-    onStarHoverOut: PropTypes.func,
-    renderStarIcon: PropTypes.func,
-    renderStarIconHalf: PropTypes.func
-  };
 
   static defaultProps = {
     starCount: 5,
@@ -153,15 +141,8 @@ class StarRatingComponent extends Component {
   }
 
   renderIcon(index, value, name, id) {
-    const { renderStarIcon, renderStarIconHalf } = this.props;
+    const { renderStarIcon } = this.props;
 
-    if (
-      typeof renderStarIconHalf === 'function' &&
-      Math.ceil(value) === index &&
-      value % 1 !== 0
-    ) {
-      return renderStarIconHalf(index, value, name, id);
-    }
 
     if (typeof renderStarIcon === 'function') {
       return renderStarIcon(index, value, name, id);
