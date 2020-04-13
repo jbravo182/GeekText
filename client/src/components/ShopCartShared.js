@@ -107,7 +107,7 @@ class ShopCartShared extends Component
             bookImageURL = '',
             bookDescription = '',
             bookID = 0,
-            bookPrice = 0.99,
+            bookPrice = '',
             bookQty = 1; 
 
         //string element setup
@@ -129,7 +129,7 @@ class ShopCartShared extends Component
         var objGuest = JSON.parse(tempString);
 
         //call addToDB
-        //this.addToDB(objGuest, index, cartData, destinationID);
+        this.addToDB(objGuest, index, cartData, destinationID);
 
     }
     
@@ -140,7 +140,7 @@ class ShopCartShared extends Component
       return (
          
          <React.Fragment>
-           <Button variant="outline-dark" onClick={(e) => this.SCadd_handleSubmit(e)}><u>add to shopcart</u>> 
+           <Button variant="outline-dark" onClick={(e) => this.SCadd_handleSubmit(e)}><u>add to shopcart</u> 
 
            </Button>
           </React.Fragment>
