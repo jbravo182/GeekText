@@ -1,5 +1,9 @@
 const router = require('express').Router();
-let Book = require('../../models/book.model');
+const Book = require('../../models/book.model');
+const Author = require('../../models/author.model');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
+
 
 router.route('/').get((req, res) => {
     Book.find()
@@ -7,27 +11,24 @@ router.route('/').get((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/add').post((req, res) => {
-  const title = req.body.title;
-  const author = req.body.author;
-  const description = req.body.description;
-  const cover = req.body.cover;
-  const publisher = req.body.publisher;
-  const genre = req.body.genre;
-  const pub_date = req.body.pub_date;
-  const price = req.body.price;
+router.route('/add').post(async(req, res) => {
+    const {title,author,authorId,description,cover,publisher,genre,pub_date,price,topSeller,avg_rating} = req.body;
 
+    let authorModel = await Author.findById(authorId);
 
-  const newBook = new Book({
+   const newBook = new Book({
     title,
     author,
+    authorId: authorModel,
     description,
     cover,
     publisher,
     genre,
     pub_date,
-    price
-  });
+    price,
+    topSeller,
+    avg_rating,
+  }); 
   
   newBook.save()
   .then(() => res.json('Book added!'))
@@ -35,7 +36,18 @@ router.route('/add').post((req, res) => {
 });
 
 router.route('/:id').get((req, res) => {
-    Book.findById(req.params.id)
+    Book.aggregate([
+        { "$match": { "_id": ObjectId(req.params.id) } }
+        ,{
+        '$lookup':
+          {
+            from: "Author",
+            localField: "authorId",
+            foreignField: "_id",
+            as: "author_info"
+          }
+     }
+    ])
     .then(book => res.json(book))
     .catch(err => res.status(400).json('Error: ' + err));
 });
@@ -57,6 +69,7 @@ router.route('/update/:id').post((req, res) => {
         book.genre = req.body.genre;
         book.pub_date = req.body.pub_date;
         book.price = req.body.price;
+        book.avg_rating = req.body.avg_rating;
         
         book.save()
         .then(() => res.json('Book updated!'))
