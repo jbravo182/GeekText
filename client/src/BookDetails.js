@@ -31,11 +31,11 @@ class BookDetails extends Component{
   */
 }
     componentDidMount() {
-      axios.get('http://localhost:3000/api/books/5e7cc56ae5de4c1fd85e28dc')
+      axios.get('http://localhost:3000/api/books/5e7cc600e5de4c1fd85e28de')
       .then(response => {
         const stateObj = response.data[0];
         this.setState({
-          title: stateObj.username,
+          title: stateObj.title,
           author: stateObj.author,
           description: stateObj.description,
           cover: stateObj.cover,
@@ -92,13 +92,16 @@ class BookDetails extends Component{
   // }
 
   render() {
-    const { cover, author, description, publisher, pub_date, avg_rating, author_bio } = this.state;
+    const { title,cover, author, description, publisher, pub_date, avg_rating, author_bio } = this.state;
     const pub_info = `${publisher}, ${pub_date}`;
     const author_info = `${author}, ${author_bio}`;
     return (
     <div>
       <h1>Book Details</h1>
-      
+      <h2>
+          <div style={{marginLeft: '25%'}}>
+          {title}
+          </div></h2>
       <PrismaZoom maxZoom={1.5}>
         <img alt ="A Book" style={{marginLeft: '25%'}} src={ cover } />
       </PrismaZoom>
