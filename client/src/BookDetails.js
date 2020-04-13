@@ -9,6 +9,19 @@ import StarRatings from 'react-star-ratings';
 //import dbData from "./models/cartData.json" //edgar added this for shopcart
 require('./details.css');
 
+const Book = props => (
+  <tr>
+    <td>{props.book.title}</td>
+    <td><img width = {330} height = {500} src={props.book.cover} /> </td>
+  </tr>
+)
+
+const Review = props => (
+    <p>Nickname: {props.review.nickname}<br></br>
+    Rating: {props.review.rating}<br></br>
+    Review: {props.review.review}</p>
+)
+
 class BookDetails extends Component{
   constructor(props) {
     super(props);
@@ -23,6 +36,7 @@ class BookDetails extends Component{
       price: '',
       avg_rating: '3',
       author_books: [],
+      reviews: [],
     };
 /*
     //ShopCarthandlers 
@@ -31,7 +45,8 @@ class BookDetails extends Component{
   */
 }
     componentDidMount() {
-      axios.get('http://localhost:3000/api/books/5e7cc600e5de4c1fd85e28de')
+      const bookId = '5e7cc600e5de4c1fd85e28de';
+      axios.get(`http://localhost:3000/api/books/${bookId}`)
       .then(response => {
         const stateObj = response.data[0];
         this.setState({
@@ -44,18 +59,18 @@ class BookDetails extends Component{
           pub_date: stateObj.pub_date,
           price: stateObj.price,
           avg_rating: stateObj.avg_rating,
-          author_bio: stateObj.author_info[0].bio
-        })// author_info[0]._id
+          author_bio: stateObj.author_info[0].bio,
+          author_pic: stateObj.author_info[0].pic,
+          reviews: stateObj.reviews
+        })
         if(response.data[0].author_info[0]._id) {
           const authorID  = response.data[0].author_info[0]._id;
           axios.get(`http://localhost:3000/api/authors/books/${authorID}`)
           .then(response => {
-            this.setState({author_books: response.data.books[0]})
-            console.log(this.state.author_books)
+            this.setState({author_books: response.data[0].books})
           }).catch(error => {
             console.log(error)
           })
-
         }
       })
       .catch(function (error) {
@@ -64,7 +79,6 @@ class BookDetails extends Component{
     }
 
   renderTab = (label,content) => {
-    console.log(content, "renderTab Data")
     return (
       <div label={label}>
       <tbody>
@@ -74,27 +88,47 @@ class BookDetails extends Component{
     )
   }
 
-  // renderBookByAuthor = (label) => {
-  //   const bookInfo = this.state.author
-  //   return (
-  //     <div label={label}>
-  //     <tbody>
-  //         {this.state.author_books.forEach(book => {
-  //           book.title
-  //           <img src={book.cover}/>
-  //         })}
+  renderBookByAuthor = (label) => {
+    return (
+      <div label={label}>
+      <tbody>
+        {this.state.author_books.map(currentbook => {
+            return <Book book={currentbook} key={currentbook._id}/>;
+          })
+        }
+      </tbody>
+      </div>
+    )
+  }
 
-  //     </tbody>
-  //     </div>
-  //   )
-  // }
+  renderReviews = (label) => {
+    return (
+      <div label={label}>
+      <tbody>
+        {this.state.reviews.map(currentreview => {
+            return <Review review={currentreview} key={currentreview._id}/>;
+          })
+        }
+      </tbody>
+      </div>
+    )
+  }
 
-  // }
+  renderAuthor = (label) => {
+    return (
+      <div label={label}>
+      <tbody>
+        <p>{this.state.author}<br></br>
+        <img src = {this.state.author_pic}/><br></br>
+        {this.state.author_bio}</p>
 
+      </tbody>
+      </div>
+    )
+  }
   render() {
-    const { title,cover, author, description, publisher, pub_date, avg_rating, author_bio } = this.state;
+    const { title,cover, author, description, publisher, pub_date, avg_rating, author_bio, author_pic, reviews } = this.state;
     const pub_info = `${publisher}, ${pub_date}`;
-    const author_info = `${author}, ${author_bio}`;
     return (
     <div>
       <h1>Book Details</h1>
@@ -115,11 +149,11 @@ class BookDetails extends Component{
       />
       </div>
       <Tabs>
-        {this.renderTab("Author", author_bio)}
+        {this.renderAuthor("Author")}
         {this.renderTab("Description", description)}
         {this.renderTab("Publishing Info", pub_info)}
-        {this.renderTab("Comments", "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui")}
-        {/* {this.renderBookByAuthor("Books by Same Author")} */}
+        {this.renderBookByAuthor("Books by Same Author")}
+        {this.renderReviews("Reviews")}
       </Tabs>
    </div>
     );

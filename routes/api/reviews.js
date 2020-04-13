@@ -1,5 +1,5 @@
 const router = require('express').Router();
-let Review = require('../../models/Review.model');
+const Review = require('../../models/Review.model');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -22,6 +22,14 @@ router.route('/:id').get((req, res) => {
   Review.findById(req.params.id)
     .then(Review => res.json(Review))
     .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.route('/book/:id').get((req, res) => {
+  Review.aggregate([
+      { "$match": { "book_id": ObjectId(req.params.id) } }
+  ])
+  .then(Review => res.json(Review))
+  .catch(err => res.status(400).json('Error: ' + err));
 });
 
 router.route('/:id').delete((req, res) => {
