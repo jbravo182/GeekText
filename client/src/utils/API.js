@@ -75,8 +75,16 @@ export default {
                 'x-access-token': token
             }});
     },
+    getSearchResults: function(data){
+        console.log('Doing post');
+        console.log('Data in post ' + data);
+        let token = localStorage.getItem("auth_token");
+        return axios.post('/api/search/getSearchResults', data, {headers: {
+            'x-access-token':token
+        }});
+    },
     getAllBooks: function(data){
-        return axios.post('/api/search/getAllBooks', data)
+        return axios.post('/api/search/getAllBooks', data);
     },
     add: function(data) {
         return axios.post('/api/ShoppingCart/add', data);
@@ -91,4 +99,17 @@ export default {
         console.log("I reached componentDidMount");
         return axios.get('/api/ShoppingCart', data);
     },
+    createReview: function (data) {
+        return axios.post('/api/review/createReview', data);
+    },
+    getNickname: function (data) {
+        return axios.post('/api/review/getNickname', data);
+    },
+    getOneBook: function(data) {
+        return axios.post('/api/review/getOneBook', data);
+    },
+    addAverageRating: function(data) {
+        return axios.post('/api/review/addAverageRating', data);
+    }
+
 };
