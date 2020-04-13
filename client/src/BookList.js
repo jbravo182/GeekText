@@ -196,6 +196,16 @@ class BookList extends Component {
                     this.setState({sort: event.target.value, books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(this.props.match.params.term.toLowerCase()) && x.avg_rating >= this.state.rating).orderByDescending(x => x.pub_date).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
                 }
                 break;
+            case "genre":
+                if (this.state.order === 'ASC')
+                {
+                    this.setState({sort: event.target.value, books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(this.props.match.params.term.toLowerCase()) && x.avg_rating >= this.state.rating).orderBy(x => x.genre).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
+                }
+                else
+                {
+                    this.setState({sort: event.target.value, books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(this.props.match.params.term.toLowerCase()) && x.avg_rating >= this.state.rating).orderByDescending(x => x.genre).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
+                }
+                break;
         }
     }
     
@@ -244,6 +254,16 @@ class BookList extends Component {
                 else
                 {
                     this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase()) && x.avg_rating >= this.state.rating).orderByDescending(x => x.pub_date).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
+                }
+                break;
+            case "genre":
+                if (this.state.order === 'ASC')
+                {
+                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase()) && x.avg_rating >= this.state.rating).orderBy(x => x.genre).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
+                }
+                else
+                {
+                    this.setState({books: linq.from(this.state.allBooks).where(x => JSON.stringify(x.title).toLowerCase().includes(term.toLowerCase()) && x.avg_rating >= this.state.rating).orderByDescending(x => x.genre).toArray().slice((this.state.activePage * 10) - 10, (this.state.activePage * 10))});
                 }
                 break;
         }
@@ -470,6 +490,7 @@ class BookList extends Component {
             <option value ={"author"}>AUTHOR</option>
             <option value ={"price"}>PRICE</option>
             <option value ={"date"}>DATE</option>
+            <option value ={"genre"}>GENRE</option>
             </select>
                 
                 <button id="topSearch"  onClick = {() => this.topResults(this.props.match.params.term)}>Top Books</button>
