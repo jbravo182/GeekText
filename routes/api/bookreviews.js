@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const Review = require('../../models/Review.model');
+const Review = require('../../models/bookreview.model');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 

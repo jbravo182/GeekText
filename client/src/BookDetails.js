@@ -127,14 +127,15 @@ class BookDetails extends Component{
     )
   }
   render() {
-    const { title,cover, author, description, publisher, pub_date, avg_rating, author_bio, author_pic, reviews } = this.state;
+    const { title,cover, author, description, publisher, pub_date, avg_rating, genre } = this.state;
     const pub_info = `${publisher}, ${pub_date}`;
     return (
     <div>
       <h1>Book Details</h1>
       <h2>
           <div style={{marginLeft: '25%'}}>
-          {title}
+          Title: {title}<br></br>
+          Genre: {genre}
           </div></h2>
       <PrismaZoom maxZoom={1.5}>
         <img alt ="A Book" style={{marginLeft: '25%'}} src={ cover } />
