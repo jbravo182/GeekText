@@ -37,8 +37,8 @@ router.route('/add').post(async(req, res) => {
 
 router.route('/:id').get((req, res) => {
     Book.aggregate([
-        { "$match": { "_id": ObjectId(req.params.id) } },
-        {
+        { "$match": { "_id": ObjectId(req.params.id) } }
+        ,{
         '$lookup':
           {
             from: "Author",
@@ -46,7 +46,8 @@ router.route('/:id').get((req, res) => {
             foreignField: "_id",
             as: "author_info"
           }
-     }])
+     }
+    ])
     .then(book => res.json(book))
     .catch(err => res.status(400).json('Error: ' + err));
 });

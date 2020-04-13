@@ -11,7 +11,7 @@ const bookSchema = new Schema({
   genre: { type: String, required: true },
   pub_date: { type: String, required: true },
   price: { type: String, required: true },
-  topSeller: { type: Boolean, required: true },
+  topSeller: { type: Boolean, required: false },
   avg_rating: { type: Number, required: true }
 }, {collection: 'Book'}, { versionKey: false });
 
