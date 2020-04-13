@@ -8,6 +8,7 @@ const ShopCart = require('./ShoppingCart');
 
 const reviewRoute = require('./review');
 const authorRouter = require('./authors');
+const bookreviewRouter = require('./bookreviews');
 const booksRouter = require('./books');
 
 
@@ -21,6 +22,7 @@ router.use('/review', reviewRoute);
 
 router.use('/books', booksRouter);
 router.use('/authors', authorRouter);
+router.use('/bookreviews', bookreviewRouter);
 
 
 module.exports = router;

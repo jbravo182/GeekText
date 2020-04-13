@@ -36,9 +36,18 @@ router.route('/add').post(async(req, res) => {
 });
 
 router.route('/:id').get((req, res) => {
+    const book_id = ObjectId(req.params.id);
     Book.aggregate([
-        { "$match": { "_id": ObjectId(req.params.id) } }
+        { "$match": { "_id": book_id } }
         ,{
+            '$lookup':
+              {
+                from: "Review",
+                localField: "_id",
+                foreignField: "book_id",
+                as: "reviews"
+              }
+         },{
         '$lookup':
           {
             from: "Author",
@@ -51,6 +60,7 @@ router.route('/:id').get((req, res) => {
     .then(book => res.json(book))
     .catch(err => res.status(400).json('Error: ' + err));
 });
+
 
 router.route('/:id').delete((req, res) => {
     Book.findByIdAndDelete(req.params.id)
