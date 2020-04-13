@@ -1,14 +1,12 @@
 import React, { Component } from 'react'; //server related
-import { Pagination, PaginationItem, PaginationLink, Media } from 'react-bootstrap'; //pagination library
-import { ListGroup } from 'react-bootstrap';
-import { Link } from 'react-router-dom'
+import { Button } from 'react-bootstrap' //edgar added this for shopcart
 import axios from 'axios';
-import API from "./utils/API";
-import { render } from "react-dom";
 import './index.css';
-import book from "./book.jpg";
 import Tabs from './Tabs';
-
+import PrismaZoom from 'react-prismazoom';
+import StarRatings from 'react-star-ratings';
+//import API from "./utils/API"; //edgar added this for shopcart
+//import dbData from "./models/cartData.json" //edgar added this for shopcart
 require('./details.css');
 
 class BookDetails extends Component{
@@ -18,46 +16,110 @@ class BookDetails extends Component{
       title: '',
       author: '',
       description: '',
-      publishing: 'N/A',
-    }
-  }
+      cover: '',
+      pubisher: '',
+      genre: '',
+      pub_date: '',
+      price: '',
+      avg_rating: '3',
+      author_books: [],
+    };
+/*
+    //ShopCarthandlers 
+    this.removesSaveLater_ButtonHandle = this.removeSaveLater_ButtonHandle.bind(this); //edgar added
+    this.SCadd_handleSubmit = this.SCadd_handleSubmit.bind(this); //edgar added
+  */
+}
     componentDidMount() {
-      
-      // GET BOOK DETAILS: 
-      axios.get("api/book/1")// /book/${props.id}
+      axios.get('http://localhost:3000/api/books/5e7cc56ae5de4c1fd85e28dc')
       .then(response => {
-        console.log(response, "KEVIN response")
+        const stateObj = response.data[0];
         this.setState({
-            title: response.data.title,
-            author: response.data.author,
-            description: response.data.description,
-            publishing: response.data.publishing
-        })
-      }).catch(function (error) { console.log(error);})
+          title: stateObj.username,
+          author: stateObj.author,
+          description: stateObj.description,
+          cover: stateObj.cover,
+          publisher: stateObj.publisher,
+          genre: stateObj.genre,
+          pub_date: stateObj.pub_date,
+          price: stateObj.price,
+          avg_rating: stateObj.avg_rating,
+          author_bio: stateObj.author_info[0].bio
+        })// author_info[0]._id
+        if(response.data[0].author_info[0]._id) {
+          const authorID  = response.data[0].author_info[0]._id;
+          axios.get(`http://localhost:3000/api/authors/books/${authorID}`)
+          .then(response => {
+            this.setState({author_books: response.data.books[0]})
+            console.log(this.state.author_books)
+          }).catch(error => {
+            console.log(error)
+          })
+
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
     }
-    render (){
-    return (<div>
+
+  renderTab = (label,content) => {
+    console.log(content, "renderTab Data")
+    return (
+      <div label={label}>
+      <tbody>
+          {content}
+      </tbody>
+      </div>
+    )
+  }
+
+  // renderBookByAuthor = (label) => {
+  //   const bookInfo = this.state.author
+  //   return (
+  //     <div label={label}>
+  //     <tbody>
+  //         {this.state.author_books.forEach(book => {
+  //           book.title
+  //           <img src={book.cover}/>
+  //         })}
+
+  //     </tbody>
+  //     </div>
+  //   )
+  // }
+
+  // }
+
+  render() {
+    const { cover, author, description, publisher, pub_date, avg_rating, author_bio } = this.state;
+    const pub_info = `${publisher}, ${pub_date}`;
+    const author_info = `${author}, ${author_bio}`;
+    return (
+    <div>
       <h1>Book Details</h1>
-      <img src={book} />
-      <div>Ratings: *****</div>
+      
+      <PrismaZoom maxZoom={1.5}>
+        <img alt ="A Book" style={{marginLeft: '25%'}} src={ cover } />
+      </PrismaZoom>
+      <div style={{marginLeft: '25%'}}>
+      <StarRatings
+        rating={Number(avg_rating)}
+        //rating = {3}
+        starDimension="40px"
+        starSpacing="18px"
+        starRatedColor="red"
+      />
+      </div>
       <Tabs>
-        <div label="Author">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </div>
-        <div label="Descripton">
-          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-        </div>
-        <div label="Publishing Info">
-          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-        </div>
-        <div label="Comments">
-          Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </div>
-        <div label="Books by Same Author">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </div>
+        {this.renderTab("Author", author_bio)}
+        {this.renderTab("Description", description)}
+        {this.renderTab("Publishing Info", pub_info)}
+        {this.renderTab("Comments", "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui")}
+        {/* {this.renderBookByAuthor("Books by Same Author")} */}
       </Tabs>
-    </div>);
+   </div>
+    );
   }
 }
 
