@@ -1,3 +1,4 @@
+
 import axios from "axios";
 
 
@@ -110,6 +111,18 @@ export default {
     },
     addAverageRating: function(data) {
         return axios.post('/api/review/addAverageRating', data);
-    }
+    },
+    updateShopCartList: function(data, type) {
+        return axios.post('/api/ShoppingCart/update', data, type);
+    },
+    getList: function(data, type) {
+        return axios.post('/api/ShoppingCart/list', data, type);
+    },
+    fileWriteCart: function(data) {
+        return axios.post('/api/ShoppingCart/upload_cart', data);
+    },
+    fileWriteSave: function(data) {
+        return axios.post('/api/ShoppingCart/upload_save', data);
+    },
 
 };
